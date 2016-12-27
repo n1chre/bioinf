@@ -1,3 +1,21 @@
+# RBTree + rank/select operations
+
+[![License](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://img.shields.io/packagist/l/doctrine/orm.svg)
+
+Project assignment for [Bioinformatics course](http://www.fer.unizg.hr/predmet/bio) at University of Zagreb, Faculty of Electrical Engineering and Computing (UNIZG FER), academic year 2016/2017.
+
+## Authors
+- [Filip Hrenić](https://github.com/filiphrenic)
+- [Zvonimir Medić](https://github.com/admiralbulldog)
+- [Matija Oršolić](https://github.com/mators)
+
+## Instructions
+```bash
+echo TODO
+```
+
+License
+---------
 MIT License
 
 Copyright (c) 2016 Filip Hrenić, Zvonimir Medić, Matija Oršolić
