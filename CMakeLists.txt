@@ -3,5 +3,5 @@ project(bioinf)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp wave_node_simple.cpp wave_node_simple.h RBTree.cpp RBTree.h RBNode.cpp RBNode.h very_good_tree.cpp very_good_tree.h wave.h)
+set(SOURCE_FILES main.cpp wave_node_simple.cpp wave_node_simple.h RBTree.cpp RBTree.h RBNode.cpp RBNode.h balanced_tree.cpp balanced_tree.h wavelet.h balanced_node.cpp balanced_node.h tree.cpp tree.h)
 add_executable(bioinf ${SOURCE_FILES})
