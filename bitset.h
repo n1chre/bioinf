@@ -12,8 +12,9 @@ class bitset {
 
  private:
   std::vector<uint64_t> bits;
-  uint32_t size;
-  const std::pair<uint32_t, uint32_t> bits_position(uint32_t idx) const;
+  uint32_t __size;
+  static const std::pair<uint32_t, uint32_t> bits_position(uint32_t idx);
+  static const uint32_t unit_size = sizeof(uint64_t) * 8;
  public:
 
   class bool_proxy {
@@ -28,7 +29,7 @@ class bitset {
     uint32_t index;
   };
 
-  bitset(uint32_t _size, uint64_t _val);
+  bitset(uint32_t _size, uint64_t _val = 0LLU);
   bitset(const bitset &bs);
 
   uint32_t popcount(uint32_t idx) const;
@@ -37,6 +38,8 @@ class bitset {
   bool_proxy &operator[](const uint32_t idx);
   const bool_proxy operator[](const uint32_t idx) const;
   bitset &set(const uint32_t idx, bool v);
+
+  const uint32_t size(void) const;
 
   friend bitset operator&(const uint32_t lhs, const bitset &rhs);
   friend bitset operator&(const bitset &lhs, const uint32_t rhs);
