@@ -9,26 +9,28 @@ bitmask_bitset::bitmask_bitset(uint32_t size) {
 }
 
 bitmask &bitmask_bitset::set(uint32_t idx, bool b) {
-  return <#initializer#>;
+  mask->set(idx, b);
+  return *this;
 }
 
 const bool bitmask_bitset::get(uint32_t idx) const {
-  return 0;
+  return (*mask)[idx];
 }
 
 const uint32_t bitmask_bitset::select01(uint32_t idx, bool b) const {
-  return nullptr;
+//  uint32_t _idx = mask->select(idx);
+//  if (!b) { _idx = idx - _idx; }
 }
 
 const uint32_t bitmask_bitset::rank0(uint32_t idx) const {
-  return nullptr;
+  return idx - rank1(idx);
 }
 
 const uint32_t bitmask_bitset::rank1(uint32_t idx) const {
-  return nullptr;
+  return mask->popcount(idx);
 }
 
 const uint32_t bitmask_bitset::size(void) const {
-  return nullptr;
+//  return mask->size();
 }
 
