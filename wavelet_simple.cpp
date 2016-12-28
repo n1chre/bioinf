@@ -30,9 +30,10 @@ wavelet_simple::wavelet_simple(const wavelet_simple *parent,
     else { aleft += a; }
   }
 
-  for (char c : str) {
+  for (int j = 0; j < str.length(); ++j) {
+    char c = str[j];
     bool right = alpha[c];
-    mask.push_back(right);
+    mask[j] = right;
     if (right) { sright += c; }
     else { sleft += c; }
   }
