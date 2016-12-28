@@ -4,15 +4,24 @@
 
 #include "balanced_node.h"
 
-zmedi_node::zmedi_node(std::unordered_map<char, uint32_t> counters, wavelet *wave) {
+balanced_node::balanced_node(std::unordered_map<char, uint32_t> counters, wavelet *wave) {
   this->wave = wave;
   this->counters = counters;
+  this->starting_idx = std::accumulate(std::begin(counters),
+                                       std::end(counters),
+                                       0U,
+                                       [](const uint32_t previous, const std::pair<char, uint32_t> &p) {
+                                         return previous + p.second;
+                                       });
+  this->ending_idx = this->starting_idx + wave->length();
+
 }
 
-uint32_t zmedi_node::getCount(char c) {
+const uint32_t balanced_node::get_count(char c) {
   return this->counters.at(c);
 }
 
-wavelet *zmedi_node::getWave() {
+const wavelet *balanced_node::get_wave() {
   return this->wave;
 }
+
