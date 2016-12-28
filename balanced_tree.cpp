@@ -13,7 +13,7 @@ const uint32_t balanced_tree::rank(char i, uint32_t idx) const {
   auto it =
       *std::lower_bound(nodes.begin(),
                         nodes.end(), idx,
-                        [](auto *&ptr, auto val) -> {
+                        [=](auto *ptr, auto val) -> bool {
                           return ptr->get_starting_idx() >= idx;
                         });
   return it->get_wave()->rank(i, idx - it->get_starting_idx());
@@ -24,7 +24,7 @@ const uint32_t balanced_tree::select(char i, uint32_t idx) const {
   auto it =
       *std::lower_bound(nodes.rbegin(),
                         nodes.rend(), idx,
-                        [](auto *&ptr, auto val) -> {
+                        [=](auto *ptr, auto val) -> bool {
                           return ptr->get_count(i) <= idx;
                         });
   return it->get_wave()->select(i, idx - it->get_count(i));
