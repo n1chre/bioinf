@@ -19,7 +19,24 @@ bitset::bitset(const bitset &bs) {
 }
 
 bitset bitset::operator>>(uint32_t pos) const {
+  // TODO zmedi
   return bitset(0);
+}
+
+bool &bitset::operator[](const uint32_t idx) {
+  // TODO zmedi
+  bool ret = false;
+  return ret;
+}
+
+const bool &bitset::operator[](const uint32_t idx) const {
+  // TODO zmedi
+  return false;
+}
+
+bitset &bitset::set(const uint32_t idx, bool v) {
+  // TODO zmedi
+  return *this;
 }
 
 bitset operator&(const uint32_t lhs, const bitset &rhs) {
