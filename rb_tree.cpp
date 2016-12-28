@@ -2,21 +2,21 @@
 // Created by Matija Orsolic on 28/12/2016.
 //
 
-#include "RBTree.h"
+#include "rb_tree.h"
 
 // Constructor
-RBTree::RBTree() {
+rb_tree::rb_tree() {
   root = NULL;
 }
 
 // Public functions
-void RBTree::insert(RBNode *node) {
+void rb_tree::insert(rb_node *node) {
   insertRecursive(root, node);
   insertFixup(node);
 }
 
 // Private functions
-void RBTree::insertRecursive(RBNode *root, RBNode *node) {
+void rb_tree::insertRecursive(rb_node *root, rb_node *node) {
   if (root == NULL) {
     root = node;
     return;
@@ -29,13 +29,13 @@ void RBTree::insertRecursive(RBNode *root, RBNode *node) {
   }
 }
 
-void RBTree::insertFixup(RBNode *node) {
+void rb_tree::insertFixup(rb_node *node) {
   while (node->getParent()->isRed()) {
-    RBNode *parent = node->getParent();
-    RBNode *grandparent = parent->getParent();
+    rb_node *parent = node->getParent();
+    rb_node *grandparent = parent->getParent();
 
     if (parent == grandparent->getLeft()) {
-      RBNode *uncle = grandparent->getRight();
+      rb_node *uncle = grandparent->getRight();
 
       if (uncle->isRed()) {
         parent->setRed(false);
@@ -52,7 +52,7 @@ void RBTree::insertFixup(RBNode *node) {
         grandparent->setRed(true);
       }
     } else {
-      RBNode *uncle = grandparent->getLeft();
+      rb_node *uncle = grandparent->getLeft();
 
       if (uncle->isRed()) {
         parent->setRed(false);
@@ -74,19 +74,19 @@ void RBTree::insertFixup(RBNode *node) {
   root->setRed(false);
 }
 
-RBNode *RBTree::rotateLeft(RBNode *node) {
+rb_node *rb_tree::rotateLeft(rb_node *node) {
   return nullptr;
 }
 
-RBNode *RBTree::rotateRight(RBNode *node) {
+rb_node *rb_tree::rotateRight(rb_node *node) {
   return nullptr;
 }
 
 // Getters and setters
-RBNode *RBTree::getRoot() const {
+rb_node *rb_tree::getRoot() const {
   return root;
 }
 
-void RBTree::setRoot(RBNode *root) {
-  RBTree::root = root;
+void rb_tree::setRoot(rb_node *root) {
+  rb_tree::root = root;
 }
