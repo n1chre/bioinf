@@ -8,7 +8,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 class wave_node_simple {
@@ -17,7 +17,7 @@ class wave_node_simple {
 
   // main parts
   std::vector<bool> mask;
-  std::map<char, bool> alpha;
+  std::unordered_map<char, bool> alpha;
 
   // pointers
   const wave_node_simple *parent;
