@@ -5,7 +5,7 @@
 #include "bitmask_bitset.h"
 
 bitmask_bitset::bitmask_bitset(uint32_t size) {
-//  mask = new bitset(size);
+  mask = new bitset(size);
 }
 
 bitmask &bitmask_bitset::set(uint32_t idx, bool b) {
@@ -18,8 +18,7 @@ const bool bitmask_bitset::get(uint32_t idx) const {
 }
 
 const uint32_t bitmask_bitset::select01(uint32_t idx, bool b) const {
-//  uint32_t _idx = mask->select(idx);
-//  if (!b) { _idx = idx - _idx; }
+  return mask->binary_select(idx, b);
 }
 
 const uint32_t bitmask_bitset::rank0(uint32_t idx) const {
@@ -27,10 +26,10 @@ const uint32_t bitmask_bitset::rank0(uint32_t idx) const {
 }
 
 const uint32_t bitmask_bitset::rank1(uint32_t idx) const {
-  return mask->popcount(idx);
+  return mask->binary_rank(idx);
 }
 
 const uint32_t bitmask_bitset::size(void) const {
-//  return mask->size();
+  return mask->size();
 }
 
