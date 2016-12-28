@@ -26,6 +26,6 @@ set(SOURCE_FILES
         # balanced tree
         balanced_node.cpp balanced_node.h
         balanced_tree.cpp balanced_tree.h
-        )
+        bitmask_bitset.cpp bitmask_bitset.h)
 
 add_executable(bioinf ${SOURCE_FILES})
