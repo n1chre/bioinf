@@ -52,19 +52,19 @@ const char wavelet_simple::operator[](uint32_t idx) {
   else { return (*left)[rank0(idx)]; }
 }
 
-const uint32_t wavelet_simple::rank(char elem, uint32_t idx) {
+const uint32_t wavelet_simple::rank(char elem, uint32_t idx) const {
   if (leaf()) { return rank0(idx); }
 
-  if (alpha[idx]) { return right->rank(elem, rank1(idx)); }
+  if (alpha.at(idx)) { return right->rank(elem, rank1(idx)); }
   else { return left->rank(elem, rank0(idx)); }
 }
 
-const wavelet_simple *wavelet_simple::findLeaf(char c) {
+const wavelet_simple *wavelet_simple::findLeaf(char c) const {
   if (leaf()) {
     return this;
   }
 
-  return (alpha[c] ? right : left)->findLeaf(c);
+  return (alpha.at(c) ? right : left)->findLeaf(c);
 }
 
 const uint32_t wavelet_simple::select_rec(uint32_t idx, bool b) const {
@@ -75,7 +75,10 @@ const uint32_t wavelet_simple::select_rec(uint32_t idx, bool b) const {
   return _idx;
 }
 
-const uint32_t wavelet_simple::select(char elem, uint32_t idx) {
+const uint32_t wavelet_simple::select(char elem, uint32_t idx) const {
   return findLeaf(elem)->select_rec(idx, false);
+}
+const uint32_t wavelet_simple::length(void) const {
+  return (uint32_t) mask.size();
 }
 

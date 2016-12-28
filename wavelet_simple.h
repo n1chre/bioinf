@@ -10,8 +10,9 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "wavelet.h"
 
-class wavelet_simple {
+class wavelet_simple : public wavelet {
 
  private:
   // main parts
@@ -25,12 +26,12 @@ class wavelet_simple {
 
   wavelet_simple(const wavelet_simple *parent, const std::string &str, const std::string &alphabet);
 
-  inline const uint32_t rank0(uint32_t idx) {
+  inline const uint32_t rank0(uint32_t idx) const {
     auto it = mask.begin();
     return (uint32_t) std::count(it, it + idx, false);
   }
 
-  inline const uint32_t rank1(uint32_t idx) {
+  inline const uint32_t rank1(uint32_t idx) const {
     return idx - rank0(idx);
   }
 
@@ -49,11 +50,11 @@ class wavelet_simple {
     throw -1;
   }
 
-  const wavelet_simple *findLeaf(char c);
+  const wavelet_simple *findLeaf(char c) const;
 
  private:
 
-  inline const bool leaf() {
+  inline const bool leaf() const {
     return left==nullptr && right==nullptr;
   }
 
@@ -63,8 +64,9 @@ class wavelet_simple {
       : wavelet_simple(nullptr, str, alphabet) {};
 
   const char operator[](uint32_t idx);
-  const uint32_t rank(char elem, uint32_t idx);
-  const uint32_t select(char elem, uint32_t idx);
+  const uint32_t rank(char elem, uint32_t idx) const override;
+  const uint32_t select(char elem, uint32_t idx) const override;
+  const uint32_t length(void) const override;
 
 };
 
