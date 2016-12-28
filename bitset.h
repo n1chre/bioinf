@@ -18,6 +18,8 @@ class bitset {
   bitset(uint32_t _size, uint64_t _val);
   bitset(const bitset &bs);
 
+  uint32_t popcount(uint32_t idx) const;
+
   bitset operator>>(uint32_t pos) const;
   bool &operator[](const uint32_t idx);
   const bool &operator[](const uint32_t idx) const;

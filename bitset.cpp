@@ -18,6 +18,10 @@ bitset::bitset(const bitset &bs) {
   this->bits = bs.bits;
 }
 
+uint32_t bitset::popcount(uint32_t idx) const {
+  return 0;
+}
+
 bitset bitset::operator>>(uint32_t pos) const {
   // TODO zmedi
   return bitset(0);
