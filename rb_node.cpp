@@ -13,50 +13,50 @@ rb_node::rb_node() {
 }
 
 // Getters and setters
-uint64_t rb_node::getSymbolCount(char symbol) {
+uint64_t rb_node::get_symbol_count(char symbol) {
   return symbols[symbol];
 }
 
-void rb_node::incrementSymbolCount(char symbol) {
+void rb_node::increment_symbol_count(char symbol) {
   symbols[symbol]++;
 }
 
-rb_node *rb_node::getLeft() const {
+rb_node *rb_node::get_left() const {
   return left;
 }
 
-void rb_node::setLeft(rb_node *left) {
+void rb_node::set_left(rb_node *left) {
   rb_node::left = left;
 }
 
-rb_node *rb_node::getRight() const {
+rb_node *rb_node::get_right() const {
   return right;
 }
 
-void rb_node::setRight(rb_node *right) {
+void rb_node::set_right(rb_node *right) {
   rb_node::right = right;
 }
 
-rb_node *rb_node::getParent() const {
+rb_node *rb_node::get_parent() const {
   return parent;
 }
 
-void rb_node::setParent(rb_node *parent) {
+void rb_node::set_parent(rb_node *parent) {
   rb_node::parent = parent;
 }
 
-bool rb_node::isRed() const {
+bool rb_node::is_red() const {
   return red;
 }
 
-void rb_node::setRed(bool red) {
+void rb_node::set_red(bool red) {
   rb_node::red = red;
 }
 
-uint64_t rb_node::getBlockNumber() const {
-  return blockNumber;
+uint64_t rb_node::get_block_number() const {
+  return block_number;
 }
 
-void rb_node::setBlockNumber(uint64_t blockNumber) {
-  rb_node::blockNumber = blockNumber;
+void rb_node::set_block_number(uint64_t blockNumber) {
+  rb_node::block_number = blockNumber;
 }

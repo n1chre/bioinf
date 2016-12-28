@@ -11,21 +11,21 @@ class rb_tree {
  private:
   rb_node *root;
 
-  static rb_node *rotateRight(rb_node *node);
+  static rb_node *rotate_right(rb_node *node);
 
-  static rb_node *rotateLeft(rb_node *node);
+  static rb_node *rotate_left(rb_node *node);
 
-  void insertFixup(rb_node *node);
+  void insert_fixup(rb_node *node);
 
-  void insertRecursive(rb_node *root, rb_node *node);
+  void insert_recursive(rb_node *root, rb_node *node);
 
  public:
   rb_tree();
 
   void insert(rb_node *node);
 
-  rb_node *getRoot() const;
-  void setRoot(rb_node *root);
+  rb_node *get_root() const;
+  void set_root(rb_node *root);
 };
 
 #endif //BIOINF_RBTREE_H

@@ -11,82 +11,82 @@ rb_tree::rb_tree() {
 
 // Public functions
 void rb_tree::insert(rb_node *node) {
-  insertRecursive(root, node);
-  insertFixup(node);
+  insert_recursive(root, node);
+  insert_fixup(node);
 }
 
 // Private functions
-void rb_tree::insertRecursive(rb_node *root, rb_node *node) {
+void rb_tree::insert_recursive(rb_node *root, rb_node *node) {
   if (root == NULL) {
     root = node;
     return;
   }
 
-  if (root->getBlockNumber() > node->getBlockNumber()) {
-    insertRecursive(root->getRight(), node);
+  if (root->get_block_number() > node->get_block_number()) {
+    insert_recursive(root->get_right(), node);
   } else {
-    insertRecursive(root->getLeft(), node);
+    insert_recursive(root->get_left(), node);
   }
 }
 
-void rb_tree::insertFixup(rb_node *node) {
-  while (node->getParent()->isRed()) {
-    rb_node *parent = node->getParent();
-    rb_node *grandparent = parent->getParent();
+void rb_tree::insert_fixup(rb_node *node) {
+  while (node->get_parent()->is_red()) {
+    rb_node *parent = node->get_parent();
+    rb_node *grandparent = parent->get_parent();
 
-    if (parent == grandparent->getLeft()) {
-      rb_node *uncle = grandparent->getRight();
+    if (parent == grandparent->get_left()) {
+      rb_node *uncle = grandparent->get_right();
 
-      if (uncle->isRed()) {
-        parent->setRed(false);
-        uncle->setRed(false);
-        grandparent->setRed(true);
+      if (uncle->is_red()) {
+        parent->set_red(false);
+        uncle->set_red(false);
+        grandparent->set_red(true);
         node = grandparent;
       } else {
-        if (node == node->getParent()->getRight()) {
-          rotateLeft(node);
+        if (node == node->get_parent()->get_right()) {
+          rotate_left(node);
           node = parent;
         }
-        rotateRight(parent);
-        parent->setRed(false);
-        grandparent->setRed(true);
+        rotate_right(parent);
+        parent->set_red(false);
+        grandparent->set_red(true);
       }
     } else {
-      rb_node *uncle = grandparent->getLeft();
+      rb_node *uncle = grandparent->get_left();
 
-      if (uncle->isRed()) {
-        parent->setRed(false);
-        uncle->setRed(false);
-        grandparent->setRed(true);
+      if (uncle->is_red()) {
+        parent->set_red(false);
+        uncle->set_red(false);
+        grandparent->set_red(true);
         node = grandparent;
       } else {
-        if (node == node->getParent()->getLeft()) {
-          rotateRight(node);
+        if (node == node->get_parent()->get_left()) {
+          rotate_right(node);
           node = parent;
         }
-        rotateLeft(parent);
-        parent->setRed(false);
-        grandparent->setRed(true);
+        rotate_left(parent);
+        parent->set_red(false);
+        grandparent->set_red(true);
       }
     }
   }
 
-  root->setRed(false);
+  root->set_red(false);
 }
 
-rb_node *rb_tree::rotateLeft(rb_node *node) {
+rb_node *rb_tree::rotate_left(rb_node *node) {
   return nullptr;
 }
 
-rb_node *rb_tree::rotateRight(rb_node *node) {
+rb_node *rb_tree::rotate_right(rb_node *node) {
   return nullptr;
 }
 
 // Getters and setters
-rb_node *rb_tree::getRoot() const {
+rb_node *rb_tree::get_root() const {
   return root;
 }
 
-void rb_tree::setRoot(rb_node *root) {
+void rb_tree::set_root(rb_node *root) {
   rb_tree::root = root;
 }
