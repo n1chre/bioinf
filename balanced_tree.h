@@ -12,14 +12,14 @@
 #include <algorithm>
 #include <vector>
 
-class balanced_tree : public tree{
+class balanced_tree : public tree {
  private:
   uint32_t size;
-  std::vector<balanced_node*> nodes;
+  std::vector<balanced_node *> nodes;
  public:
-  balanced_tree(std::vector<balanced_node*> &nodes);
-  const uint32_t rank(char i, uint32_t idx) override;
-  const uint32_t select(char i, uint32_t idx) override;
+  balanced_tree(std::vector<balanced_node *> &nodes);
+  const uint32_t rank(char i, uint32_t idx) const override;
+  const uint32_t select(char i, uint32_t idx) const override;
 };
 
 #endif //BIOINF_VERYGOODTREE_H

@@ -17,11 +17,18 @@ balanced_node::balanced_node(std::unordered_map<char, uint32_t> counters, wavele
 
 }
 
-const uint32_t balanced_node::get_count(char c) {
+const uint32_t balanced_node::get_count(char c) const {
   return this->counters.at(c);
 }
 
-const wavelet *balanced_node::get_wave() {
+const wavelet *balanced_node::get_wave() const {
   return this->wave;
+}
+
+const uint32_t balanced_node::get_starting_idx(void) const {
+  return this->starting_idx;
+}
+const uint32_t balanced_node::get_ending_idx(void) const {
+  return this->ending_idx;
 }
 

@@ -19,8 +19,10 @@ class balanced_node {
   uint32_t ending_idx;
  public:
   balanced_node(std::unordered_map<char, uint32_t> counters, wavelet *wave);
-  const uint32_t get_count(char c);
-  const wavelet *get_wave();
+  const uint32_t get_count(char c) const;
+  const wavelet *get_wave() const;
+  const uint32_t get_starting_idx(void) const;
+  const uint32_t get_ending_idx(void) const;
 };
 
 #endif //BIOINF_ZMEDI_NODE_H
