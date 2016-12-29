@@ -13,6 +13,7 @@ set(SOURCE_FILES
         # bitmask
         bitmask.cpp bitmask.h
         bitmask_vector.cpp bitmask_vector.h
+        bitmask_bitset.cpp bitmask_bitset.h
 
         # wavelet
         wavelet.cpp wavelet.h
@@ -21,11 +22,13 @@ set(SOURCE_FILES
         tree.h
 
         # rb tree
-        rb_tree.cpp rb_tree.h rb_node.cpp rb_node.h
+        rb_node.cpp rb_node.h
+        rb_tree.cpp rb_tree.h
 
-        # balanced tree
+        #balanced tree
         balanced_node.cpp balanced_node.h
         balanced_tree.cpp balanced_tree.h
-        bitmask_bitset.cpp bitmask_bitset.h)
+
+        )
 
 add_executable(bioinf ${SOURCE_FILES})
