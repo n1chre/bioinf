@@ -78,8 +78,6 @@ uint32_t bitset::binary_select(uint32_t idx, bool v) const {
     throw -1;
   }
 
-//  std::cout << val << std::endl;
-
   uint32_t j;
   for (j = 0; j < unit_size; j++) {
     if (((bool) (bits[i] & (1llu << j)))==v) { sum++; }
@@ -88,6 +86,10 @@ uint32_t bitset::binary_select(uint32_t idx, bool v) const {
 
   if (j==unit_size) {
     throw -2;
+  }
+
+  if ((i==bits.size() - 1) && (j >= (__size%unit_size))) {
+    throw -3;
   }
 
   return i*unit_size + j;
@@ -157,7 +159,7 @@ bitset::bool_proxy::bool_proxy(uint64_t &mask, uint32_t bit) : mask(mask), index
 
 }
 bitset::bool_proxy::operator bool() const {
-  return mask & (1LLU << index);
+  return (bool) (mask & (1LLU << index));
 }
 bitset::bool_proxy &bitset::bool_proxy::operator=(bool bit) {
   mask |= 1LLU << index;

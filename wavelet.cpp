@@ -3,7 +3,6 @@
 //
 
 #include "wavelet.h"
-#include <iostream>
 
 // private
 
@@ -42,9 +41,6 @@ wavelet::wavelet(const wavelet *parent, const std::string &str, const std::strin
       sleft += c;
     }
   }
-
-  std::cout << sleft << " " << aleft << std::endl;
-  std::cout << sright << " " << aright << std::endl;
 
   left = new wavelet(this, sleft, aleft);
   right = new wavelet(this, sright, aright);
