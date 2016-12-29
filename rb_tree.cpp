@@ -75,11 +75,45 @@ void rb_tree::insert_fixup(rb_node *node) {
 }
 
 rb_node *rb_tree::rotate_left(rb_node *node) {
-  return nullptr;
+  rb_node *parent = node->get_parent();
+  if (parent == NULL) {
+    return NULL;
+  }
+
+  rb_node *grandparent = node->get_parent()->get_parent();
+  if (grandparent != NULL) {
+    if (grandparent->get_right() == parent) {
+      grandparent->set_right(node);
+    } else {
+      grandparent->set_left(node);
+    }
+  }
+
+  parent->set_right(node->get_left());
+  node->set_left(parent);
+
+  return NULL;
 }
 
 rb_node *rb_tree::rotate_right(rb_node *node) {
-  return nullptr;
+  rb_node *parent = node->get_parent();
+  if (parent == NULL) {
+    return NULL;
+  }
+
+  rb_node *grandparent = node->get_parent()->get_parent();
+  if (grandparent != NULL) {
+    if (grandparent->get_right() == parent) {
+      grandparent->set_right(node);
+    } else {
+      grandparent->set_left(node);
+    }
+  }
+
+  parent->set_left(node->get_right());
+  node->set_right(parent);
+
+  return NULL;
 }
 
 // Getters and setters
