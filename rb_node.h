@@ -26,8 +26,8 @@ class rb_node {
   void set_parent(rb_node *parent);
   bool is_red() const;
   void set_red(bool isRed);
-  data *getD() const;
-  void setD(data *d);
+  data *get_d() const;
+  void set_d(data *d);
 };
 
 #endif //BIOINF_RBNODE_H

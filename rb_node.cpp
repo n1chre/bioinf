@@ -45,10 +45,10 @@ void rb_node::set_red(bool red) {
   rb_node::red = red;
 }
 
-data *rb_node::getD() const {
+data *rb_node::get_d() const {
   return d;
 }
 
-void rb_node::setD(data *d) {
+void rb_node::set_d(data *d) {
   rb_node::d = d;
 }
