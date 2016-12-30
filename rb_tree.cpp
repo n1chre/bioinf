@@ -5,28 +5,37 @@
 #include "rb_tree.h"
 
 // Constructor
-rb_tree::rb_tree() {
-  root = NULL;
+rb_tree::rb_tree(std::vector<data *> &nodes) {
+  for (auto i : nodes) {
+    insert(i);
+  }
 }
 
 // Public functions
-void rb_tree::insert(rb_node *node) {
-  insert_recursive(root, node);
+void rb_tree::insert(data *d) {
+  rb_node *node = new rb_node(d);
+  root = insert_recursive(d, root, node);
   insert_fixup(node);
 }
 
-// Private functions
-void rb_tree::insert_recursive(rb_node *root, rb_node *node) {
-  if (root == NULL) {
-    root = node;
-    return;
-  }
+const uint32_t rb_tree::rank(char i, uint32_t idx) const {
+  return 0;
+}
 
-  /*if (root->get_block_number() > node->get_block_number()) {
-    insert_recursive(root->get_right(), node);
+const uint32_t rb_tree::select(char i, uint32_t idx) const {
+  return 0;
+}
+
+// Private functions
+rb_node *rb_tree::insert_recursive(data *d, rb_node *node, rb_node *new_node) {
+  if (node == nullptr) {
+    node = new_node;
+  } else if (d->get_starting_idx() > node->get_d()->get_starting_idx()) {
+    node->set_right(insert_recursive(d, node->get_right(), new_node));
   } else {
-    insert_recursive(root->get_left(), node);
-  }*/
+    node->set_left(insert_recursive(d, node->get_left(), new_node);
+  }
+  return node;
 }
 
 void rb_tree::insert_fixup(rb_node *node) {

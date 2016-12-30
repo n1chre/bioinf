@@ -16,7 +16,7 @@ class rb_node {
   data *d;
 
  public:
-  rb_node();
+  rb_node(data *d);
 
   rb_node *get_left() const;
   void set_left(rb_node *left);

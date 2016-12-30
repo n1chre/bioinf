@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
 
   tree *t;
   if (use_rb) {
-    //t = new rb_tree();
+    t = new rb_tree(data_chunks);
   } else {
     t = new balanced_tree(data_chunks);
   }
