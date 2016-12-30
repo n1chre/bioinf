@@ -1,26 +1,32 @@
 #!/usr/bin/env bash
 
-ACTG='ACTG'
-LINE_WIDTH=80
-
-if [[ $# -lt 1 ]] || [[ $# -gt 2 ]]; then
-    echo "usage: $0 length [line_width]"
+if [[ $# -lt 1 ]] || [[ $# -gt 3 ]]; then
+    echo "usage: $0 length [line_width=80] [alphabet=ACTG]"
     exit 1
 fi
 
+# store parameters
 LENGTH=$1
+
+LINE_WIDTH=80
 if [[ $# -eq 2 ]]; then
     LINE_WIDTH=$2
+fi;
+
+ALPHA='ACTG'
+if [[ $# -eq 3 ]]; then
+    ALPHA=$3
 fi;
 
 ROWS=$(( ${LENGTH} / ${LINE_WIDTH} ))
 REST=$(( ${LENGTH} % ${LINE_WIDTH} ))
 
+# create output
 echo ">EXAMPLE_LEN_${1}"
 
 rand_char() {
     i=$(( RANDOM % 4 ))
-    echo -n ${ACTG:${i}:1}
+    echo -n ${ALPHA:${i}:1}
 }
 
 if [[ ${ROWS} -gt 0 ]]; then
