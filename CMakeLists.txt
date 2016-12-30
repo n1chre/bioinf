@@ -25,10 +25,11 @@ set(SOURCE_FILES
         rb_node.cpp rb_node.h
         rb_tree.cpp rb_tree.h
 
-        #balanced tree
+        # balanced tree
         balanced_node.cpp balanced_node.h
         balanced_tree.cpp balanced_tree.h
 
-        )
+        # data
+        data.cpp data.h)
 
 add_executable(bioinf ${SOURCE_FILES})
