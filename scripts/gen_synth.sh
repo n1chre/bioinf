@@ -30,8 +30,8 @@ rand_char() {
 }
 
 if [[ ${ROWS} -gt 0 ]]; then
-    for i in `seq 0 ${ROWS}`; do
-        for j in `seq ${LINE_WIDTH}`; do
+    for i in `seq 1 ${ROWS}`; do
+        for j in `seq 1 ${LINE_WIDTH}`; do
             rand_char
         done;
         echo ''
@@ -39,9 +39,7 @@ done;
 fi;
 
 if [[ ${REST} -gt 0 ]]; then
-    for j in `seq 0 ${REST}`; do
+    for j in `seq 1 ${REST}`; do
         rand_char
     done;
 fi;
-
-
