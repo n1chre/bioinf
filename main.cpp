@@ -37,39 +37,39 @@ int main(int argc, char **argv) {
   uint32_t chunk_size = 1024;
 
   bool show_stats = false;
-  bool use_bitmask = false;
+  bool use_bitset = false;
   bool use_rb = false;
 
   for (int i = 1; i < argc; ++i) {
-    if (strncmp(argv[i], "-i", 2) == 0) {
+    if (strncmp(argv[i], "-i", 2)==0) {
       if (i < argc - 1) {
         input_path = argv[++i];
       } else {
         quit("Input path not provided");
       }
-    } else if (strncmp(argv[i], "-o", 2) == 0) {
+    } else if (strncmp(argv[i], "-o", 2)==0) {
       if (i < argc - 1) {
         output_path = argv[++i];
       } else {
         quit("Output path not provided");
       }
-    } else if (strncmp(argv[i], "-cs", 3) == 0) {
+    } else if (strncmp(argv[i], "-cs", 3)==0) {
       if (i < argc - 1) {
         chunk_size = (uint32_t) std::stoi(argv[++i]);
       } else {
         quit("Chunk size not provided");
       }
-    } else if (strncmp(argv[i], "-c", 2) == 0) {
+    } else if (strncmp(argv[i], "-c", 2)==0) {
       if (i < argc - 1) {
         command_path = argv[++i];
       } else {
         quit("Command file path not provided");
       }
-    } else if (strncmp(argv[i], "-s", 2) == 0) {
+    } else if (strncmp(argv[i], "-s", 2)==0) {
       show_stats = true;
-    } else if (strncmp(argv[i], "-b", 2) == 0) {
-      use_bitmask = true;
-    } else if (strncmp(argv[i], "-t", 2) == 0) {
+    } else if (strncmp(argv[i], "-b", 2)==0) {
+      use_bitset = true;
+    } else if (strncmp(argv[i], "-t", 2)==0) {
       use_rb = true;
     } else {
       quit("Invalid argument provided");
@@ -79,10 +79,10 @@ int main(int argc, char **argv) {
   std::ifstream command_file(command_path);
   std::ofstream output_file(output_path);
 
-  std::istream &cmd_in = command_path == nullptr ? std::cin : command_file;
-  std::ostream &data_out = output_path == nullptr ? std::cout : output_file;
+  std::istream &cmd_in = command_path==nullptr ? std::cin : command_file;
+  std::ostream &data_out = output_path==nullptr ? std::cout : output_file;
 
-  if (input_path == nullptr) {
+  if (input_path==nullptr) {
     quit("Input file path is required");
   }
 
@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
   }
 
   CREATE c;
-  if (use_bitmask) {
+  if (use_bitset) {
     c = &bitmask_bitset::create;
   } else {
     c = &bitmask_vector::create;
@@ -112,8 +112,9 @@ int main(int argc, char **argv) {
 
   std::string line, name, content;
   std::vector<data *> data_chunks;
-  while (std::getline(data_in, line).good()) {
-    if (!line.empty() && line[0] != '>' && line[0] != ';') { // Identifier marker
+  while (!data_in.eof()) {
+    std::getline(data_in, line);
+    if (!line.empty() && line[0]!='>' && line[0]!=';') { // Identifier marker
       content += line;
 
       while (content.length() >= chunk_size) {
@@ -130,11 +131,12 @@ int main(int argc, char **argv) {
   //--------------------------//
 
   tree *t;
-  if (use_rb) {
-    //t = new rb_tree();
-  } else {
-    t = new balanced_tree(data_chunks);
-  }
+//  if (use_rb) {
+//    t = new rb_tree();
+//  } else {
+//    t = new balanced_tree(data_chunks);
+//  }
+  t = new balanced_tree(data_chunks);
 
   //--------------------------//
   // Execute commands         //
@@ -144,16 +146,30 @@ int main(int argc, char **argv) {
   char symbol;
   uint32_t index;
 
+  uint32_t res;
   while (!cmd_in.eof()) {
-    //std::cerr << "show" << std::endl;
     cmd_in >> command >> symbol >> index;
-    if (tolower(command) == 'r') {
-      data_out << "Rank(" << symbol << "," << index << "): " << t->rank(symbol, index) << std::endl;
-    } else if (tolower(command) == 's') {
-      data_out << "Select(" << symbol << "," << index << "): " << t->select(symbol, index) << std::endl;
+    if (tolower(command)=='r') {
+      data_out << "Rank(" << symbol << "," << index << "): ";
+      try {
+        res = t->rank(symbol, index);
+        data_out << res;
+      } catch (...) {
+        data_out << "index out of bounds";
+      }
+    } else if (tolower(command)=='s') {
+      data_out << "Select(" << symbol << "," << index << "): ";
+      try {
+        res = t->select(symbol, index);
+        data_out << res;
+      } catch (...) {
+        data_out << "index out of bounds";
+      }
     } else {
       std::cerr << "Unknown command" << std::endl;
+      continue;
     }
+    data_out << std::endl;
   }
 
   if (show_stats) {
@@ -163,10 +179,10 @@ int main(int argc, char **argv) {
     struct task_basic_info t_info;
     mach_msg_type_number_t t_info_count = TASK_BASIC_INFO_COUNT;
 
-    if (KERN_SUCCESS != task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t) &t_info, &t_info_count)) {
+    if (KERN_SUCCESS!=task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t) &t_info, &t_info_count)) {
       return -1;
     }
-    std::cout << "Memory used: " << t_info.resident_size / 1024 << " KB" << std::endl;
+    std::cout << "Memory used: " << t_info.resident_size/1024 << " KB" << std::endl;
 #else
     std::cerr << "Memory stats not supported on this OS" << std::endl;
 #endif
