@@ -1,0 +1,10 @@
+select T 8
+select C 2
+select A 5
+select T 5
+select G 7
+rank G 15 
+rank G 40 
+rank A 94 
+rank G 36 
+rank A 45 
