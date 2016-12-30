@@ -1,13 +1,26 @@
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
+
 #include "tree.h"
 #include "rb_tree.h"
 #include "balanced_tree.h"
 
+#ifdef __APPLE__
+#include "TargetConditionals.h"
+#if TARGET_OS_MAC
+#include <mach/mach.h>
+#endif
+#elif __linux__
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+int parseLine(char* line);
+int getValue();
+#endif
+
 void quit(const char *message);
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
 
   //--------------------------//
   // Read and check arguments //
@@ -110,6 +123,26 @@ int main(int argc, char** argv) {
     }
   }
 
+  if (show_stats) {
+#ifdef __APPLE__
+#include "TargetConditionals.h"
+#if TARGET_OS_MAC
+    struct task_basic_info t_info;
+    mach_msg_type_number_t t_info_count = TASK_BASIC_INFO_COUNT;
+
+    if (KERN_SUCCESS != task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t) &t_info, &t_info_count)) {
+      return -1;
+    }
+    std::cout << "Memory used: " << t_info.resident_size / 1024 << " KB" << std::endl;
+#else
+    std::cerr << "Memory stats not supported on this OS" << std::endl;
+#endif
+#elif __linux__
+
+    std::cout << "Memory used: " << getValue() << " KB" << std::endl;
+#endif
+  }
+
   return 0;
 }
 
@@ -117,3 +150,29 @@ void quit(const char *message) {
   std::cerr << message << std::endl;
   exit(-1);
 }
+
+#if __linux__
+int parseLine(char* line) {
+  int i = (int) strlen(line);
+  const char* p = line;
+  while (*p <'0' || *p > '9') p++;
+  line[i-3] = '\0';
+  i = atoi(p);
+  return i;
+}
+
+int getValue() {
+  FILE* file = fopen("/proc/self/status", "r");
+  int result = -1;
+  char line[128];
+
+  while (fgets(line, 128, file) != NULL){
+    if (strncmp(line, "VmSize:", 7) == 0){
+      result = parseLine(line);
+      break;
+    }
+  }
+  fclose(file);
+  return result;
+}
+#endif
