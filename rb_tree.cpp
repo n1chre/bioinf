@@ -22,11 +22,11 @@ void rb_tree::insert_recursive(rb_node *root, rb_node *node) {
     return;
   }
 
-  if (root->get_block_number() > node->get_block_number()) {
+  /*if (root->get_block_number() > node->get_block_number()) {
     insert_recursive(root->get_right(), node);
   } else {
     insert_recursive(root->get_left(), node);
-  }
+  }*/
 }
 
 void rb_tree::insert_fixup(rb_node *node) {

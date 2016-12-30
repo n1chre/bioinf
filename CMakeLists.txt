@@ -26,7 +26,6 @@ set(SOURCE_FILES
         rb_tree.cpp rb_tree.h
 
         # balanced tree
-        balanced_node.cpp balanced_node.h
         balanced_tree.cpp balanced_tree.h
 
         # data
