@@ -54,7 +54,9 @@ int main(int argc, char** argv) {
       use_bitmask = true;
     } else if (strncmp(argv[i], "-t", 2) == 0) {
       use_rb = true;
-    } else quit("Invalid argument provided");
+    } else {
+      quit("Invalid argument provided");
+    }
   }
 
 
@@ -90,12 +92,28 @@ int main(int argc, char** argv) {
   // Create tree              //
   //--------------------------//
 
-//  tree *t;
+  tree *t;
 //  if (use_rb) {
 //    t = new rb_tree();
 //  } else {
 //    t = new balanced_tree();
 //  }
+
+  //--------------------------//
+  // Execute commands         //
+  //--------------------------//
+
+  char command;
+  char symbol;
+  uint32_t index;
+
+  while (command_file >> command >> symbol >> index) {
+    if (command == 'r') {
+      t->rank(symbol, index);
+    } else {
+      t->select(symbol, index);
+    }
+  }
 
   return 0;
 }
