@@ -8,16 +8,15 @@
 #include "bitmask_bitset.h"
 #include "bitmask_vector.h"
 
-
 #ifdef __APPLE__
 #include "TargetConditionals.h"
 #if TARGET_OS_MAC
 #include <mach/mach.h>
 #endif
 #elif __linux__
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 int parseLine(char* line);
 int getValue();
 #endif
@@ -100,7 +99,7 @@ int main(int argc, char **argv) {
   }
 
   CREATE c;
-  if (use_bitmask){
+  if (use_bitmask) {
     c = &bitmask_bitset::create;
   } else {
     c = &bitmask_vector::create;
