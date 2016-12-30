@@ -17,7 +17,7 @@ class bitmask_vector : public bitmask {
 
  public:
 
-  bitmask *create(uint32_t size);
+  static bitmask *create(uint32_t size);
 
   bitmask &set(uint32_t idx, bool b) override;
   const bool get(uint32_t idx) const override;
