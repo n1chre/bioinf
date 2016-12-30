@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
 
-sudo apt-get -y update
-sudo apt-get -y upgrade
-sudo apt-get -y install g++
+
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt-get update -y
+
+#install g++
+sudo apt-get install gcc-5 g++-5 -y
+sudo update-alternatives --remove-all gcc
+sudo update-alternatives --remove-all g++
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 20
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 20
+sudo update-alternatives --config gcc
+sudo update-alternatives --config g++
 
 cd scripts
 chmod +x *.sh
