@@ -1,11 +1,12 @@
 #include <iostream>
 #include <fstream>
-#include <algorithm>
 #include <unordered_map>
 
 #include "tree.h"
 #include "rb_tree.h"
 #include "balanced_tree.h"
+#include "bitmask_bitset.h"
+#include "bitmask_vector.h"
 
 #ifdef __APPLE__
 #include "TargetConditionals.h"
@@ -13,9 +14,9 @@
 #include <mach/mach.h>
 #endif
 #elif __linux__
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 int parseLine(char* line);
 int getValue();
 #endif
@@ -96,6 +97,14 @@ int main(int argc, char **argv) {
   if (!cmd_in.good()) {
     quit("Given command file doesn't exist.");
   }
+
+  CREATE c;
+  if (use_bitmask) {
+    c = &bitmask_bitset::create;
+  } else {
+    c = &bitmask_vector::create;
+  }
+  bitmask::set_creator(c);
 
   //--------------------------//
   // Create nodes             //
