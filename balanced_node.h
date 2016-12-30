@@ -5,20 +5,13 @@
 #ifndef BIOINF_ZMEDI_NODE_H
 #define BIOINF_ZMEDI_NODE_H
 
-#include "wavelet.h"
-
-#include <unordered_map>
-#include <utility>
-#include <numeric>
+#include "data.h"
 
 class balanced_node {
  private:
-  std::unordered_map<char, uint32_t> counters;
-  wavelet *wave;
-  uint32_t starting_idx;
-  uint32_t ending_idx;
+  data *d;
  public:
-  balanced_node(std::unordered_map<char, uint32_t> counters, wavelet *wave);
+  balanced_node(data *d);
   const uint32_t get_count(char c) const;
   const wavelet *get_wave() const;
   const uint32_t get_starting_idx(void) const;
