@@ -54,26 +54,29 @@ int main(int argc, char** argv) {
       use_bitmask = true;
     } else if (strncmp(argv[i], "-t", 2) == 0) {
       use_rb = true;
-    }
+    } else quit("Invalid argument provided");
   }
+
+
+  std::ifstream command_file(command_path);
+  std::ofstream output_file(output_path);
+
+  std::istream& cmd_in = command_path == nullptr ? std::cin : command_file;
+  std::ostream& data_out = output_path == nullptr ? std::cout : output_file;
 
   if (input_path == nullptr) {
     quit("Input file path is required");
   }
-  if (output_path == nullptr) {
-    quit("Output file path is required");
-  }
-  if (command_path == nullptr) {
-    quit("Command file path is required");
-  }
 
   std::ifstream input_file(input_path);
+
   if (!input_file.good()) {
     quit("Given input file doesn't exist.");
   }
-  std::ifstream output_file(output_path);
-  std::ifstream command_file(command_path);
-  if (!input_file.good()) {
+  if (!data_out.good()) {
+    quit("Given output file can't be written to.");
+  }
+  if (!cmd_in.good()) {
     quit("Given command file doesn't exist.");
   }
 
