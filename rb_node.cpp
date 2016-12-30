@@ -13,14 +13,6 @@ rb_node::rb_node() {
 }
 
 // Getters and setters
-uint64_t rb_node::get_symbol_count(char symbol) {
-  return symbols[symbol];
-}
-
-void rb_node::increment_symbol_count(char symbol) {
-  symbols[symbol]++;
-}
-
 rb_node *rb_node::get_left() const {
   return left;
 }
@@ -53,10 +45,10 @@ void rb_node::set_red(bool red) {
   rb_node::red = red;
 }
 
-uint64_t rb_node::get_block_number() const {
-  return block_number;
+data *rb_node::getD() const {
+  return d;
 }
 
-void rb_node::set_block_number(uint64_t blockNumber) {
-  rb_node::block_number = blockNumber;
+void rb_node::setD(data *d) {
+  rb_node::d = d;
 }

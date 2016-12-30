@@ -5,7 +5,7 @@
 #ifndef BIOINF_RBNODE_H
 #define BIOINF_RBNODE_H
 
-#include <map>
+#include "data.h"
 
 class rb_node {
  private:
@@ -13,14 +13,10 @@ class rb_node {
   rb_node *left;
   rb_node *parent;
   bool red;
-  uint64_t block_number;
-  std::map<char, uint64_t> symbols;
+  data *d;
 
  public:
   rb_node();
-
-  uint64_t get_symbol_count(char symbol);
-  void increment_symbol_count(char symbol);
 
   rb_node *get_left() const;
   void set_left(rb_node *left);
@@ -30,8 +26,8 @@ class rb_node {
   void set_parent(rb_node *parent);
   bool is_red() const;
   void set_red(bool isRed);
-  uint64_t get_block_number() const;
-  void set_block_number(uint64_t blockNumber);
+  data *getD() const;
+  void setD(data *d);
 };
 
 #endif //BIOINF_RBNODE_H
