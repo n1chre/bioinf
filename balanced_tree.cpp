@@ -11,15 +11,15 @@ balanced_tree::balanced_tree(std::vector<data *> &nodes) {
 
 // Kolko ima charova kao i prije indexa uint32
 const uint32_t balanced_tree::rank(char i, uint32_t idx) const {
-  std::cerr << "Trazim:" << idx << std::endl;
+//  std::cerr << "Trazim:" << idx << std::endl;
   auto it =
-      std::lower_bound(nodes.begin(),
-                       nodes.end(), idx,
+      std::lower_bound(nodes.rbegin(),
+                       nodes.rend(), idx,
                        [=](auto *ptr, auto val) -> bool {
-                         return ptr->get_starting_idx() < idx;
+                         return ptr->get_starting_idx() > idx;
                        });
 
-  //std::cerr << "Imam it: " << (it == nodes.end()) << (*it)->get_starting_idx() << std::endl;
+//  std::cerr << "Imam it: " << (it == nodes.rend()) << " " << (*it)->get_starting_idx() << std::endl;
   return (*it)->get_count(i) + (*it)->get_wave()->rank(i, idx - (*it)->get_starting_idx());
 }
 
@@ -33,7 +33,6 @@ const uint32_t balanced_tree::select(char i, uint32_t idx) const {
 
                          return ptr->get_count(i) > idx;
                        });
-
-  //std::cerr << "Imam it: " << (it == nodes.rend()) << (*it)->get_starting_idx() << std::endl;
+//  std::cerr << "Imam it: " << (it == nodes.rend()) << " " << (*it)->get_starting_idx() << std::endl;
   return (*it)->get_starting_idx() + (*it)->get_wave()->select(i, idx - (*it)->get_count(i));
 }
