@@ -10,9 +10,12 @@ Project assignment for [Bioinformatics course](http://www.fer.unizg.hr/predmet/b
 - [Matija Oršolić](https://github.com/mators)
 
 ## Instructions
+
+#### Compilation
 ```bash
-echo TODO
+g++ -std=c++14 *.h *.cpp -o bioinf
 ```
+
 
 License
 ---------
