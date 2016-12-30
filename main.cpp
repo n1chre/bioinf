@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
   }
   std::ifstream output_file(output_path);
   std::ifstream command_file(command_path);
-  if (!input_file.good()) {
+  if (!command_file.good()) {
     quit("Given command file doesn't exist.");
   }
 
@@ -87,12 +87,28 @@ int main(int argc, char** argv) {
   // Create tree              //
   //--------------------------//
 
-//  tree *t;
+  tree *t;
 //  if (use_rb) {
 //    t = new rb_tree();
 //  } else {
 //    t = new balanced_tree();
 //  }
+
+  //--------------------------//
+  // Execute commands         //
+  //--------------------------//
+
+  char command;
+  char symbol;
+  uint32_t index;
+
+  while (command_file >> command >> symbol >> index) {
+    if (command == 'r') {
+      t->rank(symbol, index);
+    } else {
+      t->select(symbol, index);
+    }
+  }
 
   return 0;
 }
