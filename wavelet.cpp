@@ -4,13 +4,14 @@
 
 #include "wavelet.h"
 
+//#include <iostream>
 // private
 
 wavelet::wavelet(const wavelet *parent, const std::string &str, const std::string &alphabet) : parent(parent) {
 
   mask = bitmask::create((uint32_t) str.length());
 
-  if (alphabet.length()==1) {
+  if (alphabet.length() == 1) {
     alpha[alphabet[0]] = false;
     left = nullptr;
     right = nullptr;
@@ -18,7 +19,7 @@ wavelet::wavelet(const wavelet *parent, const std::string &str, const std::strin
   }
 
   std::string aleft, aright, sleft, sright;
-  uint8_t half = (uint8_t) (alphabet.length()/2);
+  uint8_t half = (uint8_t) (alphabet.length() / 2);
 
   for (uint32_t i = 0; i < alphabet.length(); ++i) {
     bool right = i >= half;
@@ -58,6 +59,7 @@ const char wavelet::operator[](uint32_t idx) {
 }
 
 const uint32_t wavelet::rank(char elem, uint32_t idx) const {
+  //std::cerr << "Usao" << std::endl;
   if (leaf()) { return mask->rank0(idx); }
 
   if (mask->get(idx)) { return right->rank(elem, mask->rank1(idx)); }
@@ -74,13 +76,14 @@ const wavelet *wavelet::findLeaf(char c) const {
 
 const uint32_t wavelet::select_rec(uint32_t idx, bool b) const {
   uint32_t _idx = mask->select01(idx, b);
-  if (parent!=nullptr) {
-    _idx = parent->select_rec(_idx, (this==parent->right));
+  if (parent != nullptr) {
+    _idx = parent->select_rec(_idx, (this == parent->right));
   }
   return _idx;
 }
 
 const uint32_t wavelet::select(char elem, uint32_t idx) const {
+  //std::cerr << "S:" << elem << " " << idx << std::endl;
   return findLeaf(elem)->select_rec(idx, false);
 }
 const uint32_t wavelet::length(void) const {

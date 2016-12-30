@@ -1,13 +1,16 @@
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
+#include <algorithm>
+#include <unordered_map>
+
 #include "tree.h"
 #include "rb_tree.h"
 #include "balanced_tree.h"
 
 void quit(const char *message);
+data *create_data(std::string &line, uint32_t chunk_size);
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
 
   //--------------------------//
   // Read and check arguments //
@@ -59,20 +62,19 @@ int main(int argc, char** argv) {
     }
   }
 
-
   std::ifstream command_file(command_path);
   std::ofstream output_file(output_path);
 
-  std::istream& cmd_in = command_path == nullptr ? std::cin : command_file;
-  std::ostream& data_out = output_path == nullptr ? std::cout : output_file;
+  std::istream &cmd_in = command_path == nullptr ? std::cin : command_file;
+  std::ostream &data_out = output_path == nullptr ? std::cout : output_file;
 
   if (input_path == nullptr) {
     quit("Input file path is required");
   }
 
-  std::ifstream input_file(input_path);
+  std::ifstream data_in(input_path);
 
-  if (!input_file.good()) {
+  if (!data_in.good()) {
     quit("Given input file doesn't exist.");
   }
   if (!data_out.good()) {
@@ -86,18 +88,31 @@ int main(int argc, char** argv) {
   // Create nodes             //
   //--------------------------//
 
+  std::string line, name, content;
+  std::vector<data *> data_chunks;
+  while (std::getline(data_in, line).good()) {
+    if (!line.empty() && line[0] != '>' && line[0] != ';') { // Identifier marker
+      content += line;
 
+      while (content.length() >= chunk_size) {
+        data_chunks.push_back(create_data(content, chunk_size));
+      }
+    }
+  }
+  if (content.length()) {
+    data_chunks.push_back(create_data(content, chunk_size));
+  }
 
   //--------------------------//
   // Create tree              //
   //--------------------------//
 
   tree *t;
-//  if (use_rb) {
-//    t = new rb_tree();
-//  } else {
-//    t = new balanced_tree();
-//  }
+  if (use_rb) {
+    //t = new rb_tree();
+  } else {
+    t = new balanced_tree(data_chunks);
+  }
 
   //--------------------------//
   // Execute commands         //
@@ -106,12 +121,17 @@ int main(int argc, char** argv) {
   char command;
   char symbol;
   uint32_t index;
+  //std::cerr << "show" << std::endl;
 
-  while (command_file >> command >> symbol >> index) {
-    if (command == 'r') {
-      t->rank(symbol, index);
+  while (!cmd_in.eof()) {
+    //std::cerr << "show" << std::endl;
+    cmd_in >> command >> symbol >> index;
+    if (tolower(command) == 'r') {
+      data_out << "Rank(" << symbol << "," << index << "): " << t->rank(symbol, index) << std::endl;
+    } else if (tolower(command) == 's') {
+      data_out << "Select(" << symbol << "," << index << "): " << t->select(symbol, index) << std::endl;
     } else {
-      t->select(symbol, index);
+      std::cerr << "Unknown command" << std::endl;
     }
   }
 
@@ -121,4 +141,38 @@ int main(int argc, char** argv) {
 void quit(const char *message) {
   std::cerr << message << std::endl;
   exit(-1);
+}
+
+data *create_data(std::string &line, uint32_t chunk_size) {
+  static std::unordered_map<char, uint32_t> counters;
+  static std::string alphabet = "ACTG";
+
+  uint32_t len = std::min(chunk_size, (uint32_t) line.length());
+  std::string chunk = line.substr(0, len);
+
+  std::transform(chunk.begin(), chunk.end(), chunk.begin(), ::toupper);
+
+  line = line.substr(len);
+
+  std::unordered_map<char, uint32_t> chars;
+
+  for (char c : chunk) {
+    chars[c] = chars[c] + 1;
+  }
+
+  std::string reduced_alpha;
+
+  std::transform(chars.begin(),
+                 chars.end(),
+                 std::back_inserter(reduced_alpha),
+                 [](auto &x) -> char { return x.first; });
+
+  wavelet *_wavelet = new wavelet(chunk, reduced_alpha);
+  data *_data = new data(counters, _wavelet);
+
+  for (auto it : chars) {
+    counters[it.first] = counters[it.first] + it.second;
+  }
+
+  return _data;
 }
