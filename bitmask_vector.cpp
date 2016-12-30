@@ -8,6 +8,10 @@ bitmask_vector::bitmask_vector(uint32_t size) {
   mask.assign(size, false);
 }
 
+bitmask *bitmask_vector::create(uint32_t size) {
+  return new bitmask_vector(size);
+}
+
 bitmask &bitmask_vector::set(uint32_t idx, bool b) {
   mask[idx] = b;
   return *this;

@@ -12,10 +12,11 @@ class bitmask_bitset : public bitmask {
 
  private:
   bitset *mask;
+  bitmask_bitset(uint32_t size);
 
  public:
 
-  bitmask_bitset(uint32_t size);
+  static bitmask *create(uint32_t size);
 
   bitmask &set(uint32_t idx, bool b) override;
   const bool get(uint32_t idx) const override;

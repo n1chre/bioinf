@@ -13,9 +13,11 @@ class bitmask_vector : public bitmask {
  private:
   std::vector<bool> mask;
 
+  bitmask_vector(uint32_t size);
+
  public:
 
-  bitmask_vector(uint32_t size);
+  bitmask *create(uint32_t size);
 
   bitmask &set(uint32_t idx, bool b) override;
   const bool get(uint32_t idx) const override;
