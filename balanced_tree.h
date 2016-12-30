@@ -6,7 +6,7 @@
 #define BIOINF_VERYGOODTREE_H
 
 #include "wavelet.h"
-#include "balanced_node.h"
+#include "data.h"
 #include "tree.h"
 
 #include <algorithm>
@@ -15,9 +15,9 @@
 class balanced_tree : public tree {
  private:
   uint32_t size;
-  std::vector<balanced_node *> nodes;
+  std::vector<data *> nodes;
  public:
-  balanced_tree(std::vector<balanced_node *> &nodes);
+  balanced_tree(std::vector<data *> &nodes);
   const uint32_t rank(char i, uint32_t idx) const override;
   const uint32_t select(char i, uint32_t idx) const override;
 };

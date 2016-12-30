@@ -3,8 +3,8 @@
 //
 #include "balanced_tree.h"
 
-balanced_tree::balanced_tree(std::vector<balanced_node *> &nodes) {
-  this->size = nodes.size();
+balanced_tree::balanced_tree(std::vector<data *> &nodes) {
+  this->size = (uint32_t) nodes.size();
   this->nodes = nodes;
 }
 
