@@ -8,6 +8,10 @@ bitmask_bitset::bitmask_bitset(uint32_t size) {
   mask = new bitset(size);
 }
 
+bitmask *bitmask_bitset::create(uint32_t size) {
+  return new bitmask_bitset(size);
+}
+
 bitmask &bitmask_bitset::set(uint32_t idx, bool b) {
   mask->set(idx, b);
   return *this;

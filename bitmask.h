@@ -7,10 +7,18 @@
 
 #include <cstdint>
 
+class bitmask;
+
+typedef bitmask *(*CREATE)(uint32_t);
+
 class bitmask {
+
+ private:
+  static CREATE CREATOR;
 
  public:
 
+  static void set_creator(CREATE creator);
   static bitmask *create(uint32_t size);
 
   virtual bitmask &set(uint32_t idx, bool b) = 0;
