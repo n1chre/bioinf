@@ -33,7 +33,7 @@ rb_node *rb_tree::insert_recursive(data *d, rb_node *node, rb_node *new_node) {
   } else if (d->get_starting_idx() > node->get_d()->get_starting_idx()) {
     node->set_right(insert_recursive(d, node->get_right(), new_node));
   } else {
-    node->set_left(insert_recursive(d, node->get_left(), new_node);
+    node->set_left(insert_recursive(d, node->get_left(), new_node));
   }
   return node;
 }
