@@ -1,7 +1,6 @@
 # added manually
 .idea
 cmake-build-debug
-main.cpp
 
 # Created by https://www.gitignore.io/api/macos,cmake,c++,jetbrains
 
