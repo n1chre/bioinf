@@ -25,7 +25,7 @@ REST=$(( ${LENGTH} % ${LINE_WIDTH} ))
 echo ">EXAMPLE_LEN_${1}"
 
 rand_char() {
-    i=$(( RANDOM % 4 ))
+    i=$(( RANDOM % ${#ALPHA} ))
     echo -n ${ALPHA:${i}:1}
 }
 
