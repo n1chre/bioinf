@@ -6,6 +6,7 @@
 #define BIOINF_BITMASK_VECTOR_H
 
 #include <vector>
+#include <algorithm>
 #include "bitmask.h"
 
 class bitmask_vector : public bitmask {
