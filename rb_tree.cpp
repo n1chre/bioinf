@@ -40,10 +40,13 @@ const uint32_t rb_tree::select(char i, uint32_t idx) const {
 rb_node *rb_tree::insert_recursive(data *d, rb_node *node, rb_node *new_node) {
   if (node==nullptr) {
     node = new_node;
-  } else if (d->get_starting_idx() > node->get_d()->get_starting_idx()) {
-    node->set_right(insert_recursive(d, node->get_right(), new_node));
   } else {
-    node->set_left(insert_recursive(d, node->get_left(), new_node));
+    new_node->set_parent(node);
+    if (d->get_starting_idx() > node->get_d()->get_starting_idx()) {
+      node->set_right(insert_recursive(d, node->get_right(), new_node));
+    } else {
+      node->set_left(insert_recursive(d, node->get_left(), new_node));
+    }
   }
   return node;
 }
