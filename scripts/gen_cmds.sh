@@ -24,7 +24,7 @@ rand_char() {
 }
 
 if [[ ${NUM_CMDS} -gt 0 ]]; then
-    for i in `seq 0 ${NUM_CMDS}`; do
+    for i in `seq 1 ${NUM_CMDS}`; do
         if [[ $((RANDOM%2)) -eq 0 ]]; then
             OPERATION='r'
         else

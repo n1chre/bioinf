@@ -21,6 +21,11 @@ int parseLine(char* line);
 int getValue();
 #endif
 
+long long int clock_diff(const std::chrono::steady_clock::time_point &start,
+                         const std::chrono::steady_clock::time_point &end) {
+  return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+}
+
 void quit(const char *message);
 data *create_data(std::string &line, uint32_t chunk_size);
 
@@ -101,14 +106,18 @@ int main(int argc, char **argv) {
   CREATE c;
   if (use_bitmask) {
     c = &bitmask_bitset::create;
+    std::cerr << "Using bitset as bitmask (constant time rank/select)..." << std::endl;
   } else {
     c = &bitmask_vector::create;
+    std::cerr << "Using vector of bools as bitmask (linear time rank/select)..." << std::endl;
   }
   bitmask::set_creator(c);
 
   //--------------------------//
   // Create nodes             //
   //--------------------------//
+
+  auto create_nodes_start = std::chrono::steady_clock::now();
 
   std::string line, name, content;
   std::vector<data *> data_chunks;
@@ -126,17 +135,39 @@ int main(int argc, char **argv) {
     data_chunks.push_back(create_data(content, chunk_size));
   }
 
+  auto create_nodes_end = std::chrono::steady_clock::now();
+
+  if (show_stats) {
+    std::cerr << "Creating nodes took: "
+              << clock_diff(create_nodes_start, create_nodes_end)
+              << " milliseconds"
+              << std::endl;
+  }
+
   //--------------------------//
   // Create tree              //
   //--------------------------//
 
+  auto create_tree_start = std::chrono::steady_clock::now();
+
   tree *t;
 //  if (use_rb) {
 //    t = new rb_tree();
+//    std::cerr << "Using red black tree for lookup..." << std::endl;
 //  } else {
 //    t = new balanced_tree(data_chunks);
+//    std::cerr << "Using zmedi tree for lookup..." << std::endl;
 //  }
   t = new balanced_tree(data_chunks);
+
+  auto create_tree_end = std::chrono::steady_clock::now();
+
+  if (show_stats) {
+    std::cerr << "Creating tree took: "
+              << clock_diff(create_tree_start, create_tree_end)
+              << " milliseconds"
+              << std::endl;
+  }
 
   //--------------------------//
   // Execute commands         //
@@ -146,7 +177,10 @@ int main(int argc, char **argv) {
   char symbol;
   uint32_t index;
 
+  auto cmd_exec_start = std::chrono::steady_clock::now();
+
   uint32_t res;
+  uint32_t num_cmds = 0;
   while (!cmd_in.eof()) {
     cmd_in >> command >> symbol >> index;
     if (tolower(command)=='r') {
@@ -157,6 +191,7 @@ int main(int argc, char **argv) {
       } catch (...) {
         data_out << "index out of bounds";
       }
+      num_cmds++;
     } else if (tolower(command)=='s') {
       data_out << "Select(" << symbol << "," << index << "): ";
       try {
@@ -165,11 +200,22 @@ int main(int argc, char **argv) {
       } catch (...) {
         data_out << "index out of bounds";
       }
+      num_cmds++;
     } else {
       std::cerr << "Unknown command" << std::endl;
       continue;
     }
     data_out << std::endl;
+  }
+
+  auto cmd_exec_stop = std::chrono::steady_clock::now();
+
+  if (show_stats) {
+    auto millis = clock_diff(cmd_exec_start, cmd_exec_stop);
+    std::cerr << "Executing " << num_cmds << " took: "
+              << millis << " milliseconds "
+              << "with average of " << (1.*millis/num_cmds) << "milliseconds per command"
+              << std::endl;
   }
 
   if (show_stats) {
