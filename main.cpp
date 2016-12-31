@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
+#include <unistd.h> /* getopt */
 
 #include "rank_select.h"
 #include "rb_tree.h"
@@ -21,13 +22,16 @@ int parseLine(char* line);
 int getValue();
 #endif
 
+#define SET_ARG(path) if (path.length()) {usage(argv[0]); } path = optarg
+
 long long int clock_diff(const std::chrono::steady_clock::time_point &start,
                          const std::chrono::steady_clock::time_point &end) {
   return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 }
 
 void quit(const char *message);
-data *create_data(std::string &line, uint32_t chunk_size);
+data *create_data(std::string &line, uint32_t word_size);
+void usage(const char *prog_name);
 
 int main(int argc, char **argv) {
 
@@ -35,59 +39,45 @@ int main(int argc, char **argv) {
   // Read and check arguments //
   //--------------------------//
 
-  char *input_path = nullptr;
-  char *output_path = nullptr;
-  char *command_path = nullptr;
+  std::string input_path;
+  std::string output_path;
+  std::string command_path;
 
-  uint32_t chunk_size = 1024;
+  uint32_t word_size = 1024;
 
   bool show_stats = false;
   bool use_bitmask = false;
   bool use_rb = false;
 
-  for (int i = 1; i < argc; ++i) {
-    if (strncmp(argv[i], "-i", 2)==0) {
-      if (i < argc - 1) {
-        input_path = argv[++i];
-      } else {
-        quit("Input path not provided");
-      }
-    } else if (strncmp(argv[i], "-o", 2)==0) {
-      if (i < argc - 1) {
-        output_path = argv[++i];
-      } else {
-        quit("Output path not provided");
-      }
-    } else if (strncmp(argv[i], "-cs", 3)==0) {
-      if (i < argc - 1) {
-        chunk_size = (uint32_t) std::stoi(argv[++i]);
-      } else {
-        quit("Chunk size not provided");
-      }
-    } else if (strncmp(argv[i], "-c", 2)==0) {
-      if (i < argc - 1) {
-        command_path = argv[++i];
-      } else {
-        quit("Command file path not provided");
-      }
-    } else if (strncmp(argv[i], "-s", 2)==0) {
-      show_stats = true;
-    } else if (strncmp(argv[i], "-b", 2)==0) {
-      use_bitmask = true;
-    } else if (strncmp(argv[i], "-t", 2)==0) {
-      use_rb = true;
-    } else {
-      quit("Invalid argument provided");
+  int ch;
+  while ((ch = getopt(argc, argv, "o:c:w:sbt"))!=-1) {
+    switch (ch) {
+      case 'o': SET_ARG(output_path);
+        break;
+      case 'c': SET_ARG(command_path);
+        break;
+      case 'w': word_size = (uint32_t) std::stoi(optarg);
+        break;
+      case 's': show_stats = true;
+        break;
+      case 'b': use_bitmask = true;
+        break;
+      case 't': use_rb = true;
+        break;
+      default:std::cerr << "Invalid argument " << ch << std::endl;
     }
   }
+
+  if (argc - optind!=1) { usage(argv[0]); }
+  input_path = argv[optind];
 
   std::ifstream command_file(command_path);
   std::ofstream output_file(output_path);
 
-  std::istream &cmd_in = command_path==nullptr ? std::cin : command_file;
-  std::ostream &data_out = output_path==nullptr ? std::cout : output_file;
+  std::istream &cmd_in = command_path.length() ? command_file : std::cin;
+  std::ostream &data_out = output_path.length() ? output_file : std::cout;
 
-  if (input_path==nullptr) {
+  if (input_path.length()==0) {
     quit("Input file path is required");
   }
 
@@ -126,13 +116,13 @@ int main(int argc, char **argv) {
     if (!line.empty() && line[0]!='>' && line[0]!=';') { // Identifier marker
       content += line;
 
-      while (content.length() >= chunk_size) {
-        data_chunks.push_back(create_data(content, chunk_size));
+      while (content.length() >= word_size) {
+        data_chunks.push_back(create_data(content, word_size));
       }
     }
   }
   if (content.length()) {
-    data_chunks.push_back(create_data(content, chunk_size));
+    data_chunks.push_back(create_data(content, word_size));
   }
 
   auto create_nodes_end = std::chrono::steady_clock::now();
@@ -240,16 +230,28 @@ int main(int argc, char **argv) {
   return 0;
 }
 
+void usage(const char *prog_name) {
+  std::cerr << prog_name << " [options] input_file"
+            << "\n\t-o output_file   [default=stdout]"
+            << "\n\t-c commands_file [default=stdin]"
+            << "\n\t-w word_size     [default=1024, makes sense only with -b]"
+            << "\n\t-s               [show statistics]"
+            << "\n\t-b               [use bitmask instead of bool vector]"
+            << "\n\t-t               [use red-black tree instead of lookup list]"
+            << std::endl;
+  exit(-1);
+}
+
 void quit(const char *message) {
   std::cerr << message << std::endl;
   exit(-1);
 }
 
-data *create_data(std::string &line, uint32_t chunk_size) {
+data *create_data(std::string &line, uint32_t word_size) {
   static std::unordered_map<char, uint32_t> counters;
   static std::string alphabet = "ACTG";
 
-  uint32_t len = std::min(chunk_size, (uint32_t) line.length());
+  uint32_t len = std::min(word_size, (uint32_t) line.length());
   std::string chunk = line.substr(0, len);
 
   std::transform(chunk.begin(), chunk.end(), chunk.begin(), ::toupper);
