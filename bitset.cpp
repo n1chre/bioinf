@@ -23,11 +23,6 @@ uint8_t *bitset::generate_bit_lookup(void) {
 
 uint8_t *bitset::BIT_LOOKUP = bitset::generate_bit_lookup();
 
-uint8_t bitset::popcount(uint64_t x) {
-  return BIT_LOOKUP[x >> 48] + BIT_LOOKUP[x >> 32 & 0xFFFF]
-      + BIT_LOOKUP[x >> 16 & 0xFFFF] + BIT_LOOKUP[x & 0xFFFF];
-}
-
 const std::pair<uint32_t, uint32_t> bitset::bits_position(uint32_t idx) {
   return {idx/unit_size, idx%unit_size};
 }
@@ -50,20 +45,24 @@ bitset::bitset(const bitset &bs) {
 }
 
 uint32_t bitset::binary_rank(uint32_t idx) const {
+  check_idx(idx);
+
   uint32_t sol = 0;
   auto pos = bits_position(idx);
   for (int i = 0; i < pos.first; ++i) {
     sol += popcount(bits[i]);
   }
-  sol += popcount(bits[pos.first] & (1ull << pos.second) - 1);
+
+  sol += popcount(bits[pos.first] & ((1ull << pos.second) - 1));
   return sol;
 }
 
 uint32_t bitset::binary_select(uint32_t idx, bool v) const {
-  uint32_t sum = 0;
+  check_idx(idx);
 
   auto f = [=](uint64_t x) -> uint8_t { return v ? popcount(x) : unit_size - popcount(x); };
 
+  uint32_t sum = 0;
   uint32_t i = 0;
   uint32_t val;
 
@@ -75,7 +74,7 @@ uint32_t bitset::binary_select(uint32_t idx, bool v) const {
   } while (i < bits.size());
 
   if (i==bits.size()) {
-    throw -1;
+    throw std::out_of_range("No such value");
   }
 
   uint32_t j;
@@ -85,11 +84,11 @@ uint32_t bitset::binary_select(uint32_t idx, bool v) const {
   }
 
   if (j==unit_size) {
-    throw -2;
+    throw std::out_of_range("No such value");
   }
 
   if ((i==bits.size() - 1) && (j >= (__size%unit_size))) {
-    throw -3;
+    throw std::out_of_range("No such value");
   }
 
   return i*unit_size + j;
@@ -121,12 +120,15 @@ bitset bitset::operator>>(uint32_t pos) const {
 }
 
 bitset::bool_proxy &bitset::operator[](const uint32_t idx) {
+  check_idx(idx);
+
   auto pos = bits_position(idx);
   auto ret = new bool_proxy(this->bits.at(pos.first), pos.second);
   return *ret;
 }
 
 const bitset::bool_proxy bitset::operator[](const uint32_t idx) const {
+  check_idx(idx);
   auto pos = bits_position(idx);
   uint64_t tmp = this->bits.at(pos.first);
   return bool_proxy(tmp, pos.second);
