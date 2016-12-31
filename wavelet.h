@@ -12,7 +12,11 @@
 #include <unordered_map>
 #include "bitmask.h"
 
-//template<typename B, typename std::enable_if<std::is_base_of<bitmask, B>::value>::type * = nullptr>
+/**
+ * Represents a single wavelet tree.
+ * Used to answer rank/select queries.
+ * Speed depends on bitmask's underlying implementation
+ */
 class wavelet {
 
  private:
@@ -27,12 +31,28 @@ class wavelet {
 
   wavelet(const wavelet *parent, const std::string &str, const std::string &alphabet);
 
+  /**
+   * Find leaf node which contains only given characters
+   *
+   * @param c character
+   * @return leaf node
+   */
   const wavelet *findLeaf(char c) const;
 
+  /**
+   * @return is this node a leaf node
+   */
   inline const bool leaf() const {
     return left==nullptr && right==nullptr;
   }
 
+  /**
+   * Recursive select, goes from leaf to root node
+   *
+   * @param idx index for select
+   * @param b value selected
+   * @return final select
+   */
   const uint32_t select_rec(uint32_t idx, bool b) const;
 
  public:

@@ -19,14 +19,14 @@ set(SOURCE_FILES
         wavelet.cpp wavelet.h
 
         # lookup tree
-        tree.h
+        rank_select.h
 
         # rb tree
         rb_node.cpp rb_node.h
         rb_tree.cpp rb_tree.h
 
         # balanced tree
-        balanced_tree.cpp balanced_tree.h
+        lookup_list.cpp lookup_list.h
 
         # data
         data.cpp data.h)

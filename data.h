@@ -11,11 +11,16 @@
 
 #include "wavelet.h"
 
+/**
+ * Represents data used to answer rank/select queries.
+ * Has meta data for lookup
+ */
 class data {
  private:
   std::unordered_map<char, uint32_t> counters;
   wavelet *wave;
   uint32_t starting_idx;
+
  public:
   data(const std::unordered_map<char, uint32_t> &counters, wavelet *wave);
   wavelet *get_wave() const;

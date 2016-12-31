@@ -8,6 +8,10 @@
 #include "bitmask.h"
 #include "bitset.h"
 
+/**
+ * Implementation of bitmask which uses bitsets
+ * Because of that, operations require ~ constant time
+ */
 class bitmask_bitset : public bitmask {
 
  private:

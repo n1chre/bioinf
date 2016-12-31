@@ -9,11 +9,14 @@
 #include <algorithm>
 #include "bitmask.h"
 
+/**
+ * Implementation of bitmask which uses vector of bools
+ * Because of that, operations require ~ linear time
+ */
 class bitmask_vector : public bitmask {
 
  private:
   std::vector<bool> mask;
-
   bitmask_vector(uint32_t size);
 
  public:

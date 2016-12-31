@@ -2,9 +2,9 @@
 #include <fstream>
 #include <unordered_map>
 
-#include "tree.h"
+#include "rank_select.h"
 #include "rb_tree.h"
-#include "balanced_tree.h"
+#include "lookup_list.h"
 #include "bitmask_bitset.h"
 #include "bitmask_vector.h"
 
@@ -150,15 +150,15 @@ int main(int argc, char **argv) {
 
   auto create_tree_start = std::chrono::steady_clock::now();
 
-  tree *t;
+  rank_select *t;
 //  if (use_rb) {
 //    t = new rb_tree();
 //    std::cerr << "Using red black tree for lookup..." << std::endl;
 //  } else {
-//    t = new balanced_tree(data_chunks);
+//    t = new lookup_list(data_chunks);
 //    std::cerr << "Using zmedi tree for lookup..." << std::endl;
 //  }
-  t = new balanced_tree(data_chunks);
+  t = new lookup_list(data_chunks);
 
   auto create_tree_end = std::chrono::steady_clock::now();
 

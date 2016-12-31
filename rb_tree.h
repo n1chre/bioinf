@@ -9,9 +9,9 @@
 
 #include "rb_node.h"
 #include "data.h"
-#include "tree.h"
+#include "rank_select.h"
 
-class rb_tree : public tree {
+class rb_tree : public rank_select {
  private:
   rb_node *root;
 
