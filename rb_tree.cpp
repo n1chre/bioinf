@@ -28,7 +28,7 @@ const uint32_t rb_tree::select(char i, uint32_t idx) const {
 
 // Private functions
 rb_node *rb_tree::insert_recursive(data *d, rb_node *node, rb_node *new_node) {
-  if (node == nullptr) {
+  if (node==nullptr) {
     node = new_node;
   } else if (d->get_starting_idx() > node->get_d()->get_starting_idx()) {
     node->set_right(insert_recursive(d, node->get_right(), new_node));
