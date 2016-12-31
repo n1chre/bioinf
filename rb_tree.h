@@ -19,6 +19,8 @@ class rb_tree : public rank_select {
   static rb_node *rotate_left(rb_node *node);
   void insert_fixup(rb_node *node);
   rb_node *insert_recursive(data *d, rb_node *node, rb_node *new_node);
+  const rb_node *find_by_index(rb_node *node, uint32_t idx) const;
+  const rb_node *find_by_count(rb_node *node, char i, uint32_t idx) const;
 
  public:
   rb_tree(std::vector<data *> &nodes);

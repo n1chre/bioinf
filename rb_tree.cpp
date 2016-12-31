@@ -19,11 +19,21 @@ void rb_tree::insert(data *d) {
 }
 
 const uint32_t rb_tree::rank(char i, uint32_t idx) const {
-  return 0;
+  const rb_node *node = find_by_index(root, idx);
+  if (node == nullptr) {
+    return 0U;
+  }
+  data *d = node->get_d();
+  return d->get_count(i) + d->get_wave()->rank(i, idx - d->get_starting_idx());
 }
 
 const uint32_t rb_tree::select(char i, uint32_t idx) const {
-  return 0;
+  const rb_node *node = find_by_count(root, i, idx);
+  if (node == nullptr) {
+    return 0U;
+  }
+  data *d = node->get_d();
+  return d->get_starting_idx() + d->get_wave()->select(i, idx - d->get_count(i));
 }
 
 // Private functions
@@ -34,6 +44,36 @@ rb_node *rb_tree::insert_recursive(data *d, rb_node *node, rb_node *new_node) {
     node->set_right(insert_recursive(d, node->get_right(), new_node));
   } else {
     node->set_left(insert_recursive(d, node->get_left(), new_node));
+  }
+  return node;
+}
+
+const rb_node *rb_tree::find_by_index(rb_node *node, uint32_t idx) const {
+  if (node == nullptr) {
+    return nullptr;
+  }
+
+  if (idx < node->get_d()->get_starting_idx()) {
+    return find_by_index(node->get_left(), idx);
+  }
+  if (idx > node->get_d()->get_starting_idx() + node->get_d()->get_wave()->length()) {
+    return find_by_index(node->get_right(), idx);
+  }
+  return node;
+}
+
+const rb_node *rb_tree::find_by_count(rb_node *node, char i, uint32_t idx) const {
+  if (node == nullptr) {
+    return nullptr;
+  }
+
+  uint32_t count = node->get_d()->get_count(i);
+
+  if (idx < count) {
+    return find_by_count(node->get_left(), i, idx);
+  }
+  if (idx > count + node->get_d()->get_wave()->select(i, idx - count)) {
+    return find_by_count(node->get_right(), i, idx);
   }
   return node;
 }
