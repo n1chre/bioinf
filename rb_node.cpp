@@ -5,7 +5,7 @@
 #include "rb_node.h"
 
 // Constructor
-rb_node::rb_node() {
+rb_node::rb_node(data *d) : d(d) {
   left = NULL;
   right = NULL;
   parent = NULL;

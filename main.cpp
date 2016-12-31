@@ -37,39 +37,39 @@ int main(int argc, char **argv) {
   uint32_t chunk_size = 1024;
 
   bool show_stats = false;
-  bool use_bitset = false;
+  bool use_bitmask = false;
   bool use_rb = false;
 
   for (int i = 1; i < argc; ++i) {
-    if (strncmp(argv[i], "-i", 2)==0) {
+    if (strncmp(argv[i], "-i", 2) == 0) {
       if (i < argc - 1) {
         input_path = argv[++i];
       } else {
         quit("Input path not provided");
       }
-    } else if (strncmp(argv[i], "-o", 2)==0) {
+    } else if (strncmp(argv[i], "-o", 2) == 0) {
       if (i < argc - 1) {
         output_path = argv[++i];
       } else {
         quit("Output path not provided");
       }
-    } else if (strncmp(argv[i], "-cs", 3)==0) {
+    } else if (strncmp(argv[i], "-cs", 3) == 0) {
       if (i < argc - 1) {
         chunk_size = (uint32_t) std::stoi(argv[++i]);
       } else {
         quit("Chunk size not provided");
       }
-    } else if (strncmp(argv[i], "-c", 2)==0) {
+    } else if (strncmp(argv[i], "-c", 2) == 0) {
       if (i < argc - 1) {
         command_path = argv[++i];
       } else {
         quit("Command file path not provided");
       }
-    } else if (strncmp(argv[i], "-s", 2)==0) {
+    } else if (strncmp(argv[i], "-s", 2) == 0) {
       show_stats = true;
-    } else if (strncmp(argv[i], "-b", 2)==0) {
-      use_bitset = true;
-    } else if (strncmp(argv[i], "-t", 2)==0) {
+    } else if (strncmp(argv[i], "-b", 2) == 0) {
+      use_bitmask = true;
+    } else if (strncmp(argv[i], "-t", 2) == 0) {
       use_rb = true;
     } else {
       quit("Invalid argument provided");
@@ -79,10 +79,10 @@ int main(int argc, char **argv) {
   std::ifstream command_file(command_path);
   std::ofstream output_file(output_path);
 
-  std::istream &cmd_in = command_path==nullptr ? std::cin : command_file;
-  std::ostream &data_out = output_path==nullptr ? std::cout : output_file;
+  std::istream &cmd_in = command_path == nullptr ? std::cin : command_file;
+  std::ostream &data_out = output_path == nullptr ? std::cout : output_file;
 
-  if (input_path==nullptr) {
+  if (input_path == nullptr) {
     quit("Input file path is required");
   }
 
@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
   }
 
   CREATE c;
-  if (use_bitset) {
+  if (use_bitmask) {
     c = &bitmask_bitset::create;
   } else {
     c = &bitmask_vector::create;

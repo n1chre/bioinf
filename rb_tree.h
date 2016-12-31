@@ -5,27 +5,29 @@
 #ifndef BIOINF_RBTREE_H
 #define BIOINF_RBTREE_H
 
-#include "rb_node.h"
+#include <vector>
 
-class rb_tree {
+#include "rb_node.h"
+#include "data.h"
+#include "tree.h"
+
+class rb_tree : public tree {
  private:
   rb_node *root;
 
   static rb_node *rotate_right(rb_node *node);
-
   static rb_node *rotate_left(rb_node *node);
-
   void insert_fixup(rb_node *node);
-
-  void insert_recursive(rb_node *root, rb_node *node);
+  rb_node *insert_recursive(data *d, rb_node *node, rb_node *new_node);
 
  public:
-  rb_tree();
+  rb_tree(std::vector<data *> &nodes);
 
-  void insert(rb_node *node);
-
+  void insert(data *d);
   rb_node *get_root() const;
   void set_root(rb_node *root);
+  const uint32_t rank(char i, uint32_t idx) const override;
+  const uint32_t select(char i, uint32_t idx) const override;
 };
 
 #endif //BIOINF_RBTREE_H
