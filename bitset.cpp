@@ -117,7 +117,6 @@ bitset bitset::operator>>(uint32_t pos) const {
   }
   ret.bits = new_bits;
 
-  // TODO zmedi
   return ret;
 }
 

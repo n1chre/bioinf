@@ -4,8 +4,6 @@
 
 #include "data.h"
 
-//#include <iostream>
-
 data::data(const std::unordered_map<char, uint32_t> &counters, wavelet *wave) : counters(counters), wave(wave) {
   this->starting_idx = std::accumulate(std::begin(counters),
                                        std::end(counters),
@@ -15,7 +13,6 @@ data::data(const std::unordered_map<char, uint32_t> &counters, wavelet *wave) : 
                                        });
   this->ending_idx = this->starting_idx + wave->length();
   this->counters = std::unordered_map<char, uint32_t>(counters);
-  //std::cerr << "Imam idx: " << starting_idx << std::endl;
 }
 
 const std::unordered_map<char, uint32_t> &data::get_counters() const {

@@ -4,7 +4,6 @@
 
 #include "wavelet.h"
 
-//#include <iostream>
 // private
 
 wavelet::wavelet(const wavelet *parent, const std::string &str, const std::string &alphabet) : parent(parent) {
@@ -59,7 +58,6 @@ const char wavelet::operator[](uint32_t idx) {
 }
 
 const uint32_t wavelet::rank(char elem, uint32_t idx) const {
-  //std::cerr << "Usao" << std::endl;
   if (leaf()) { return mask->rank0(idx); }
 
   if (mask->get(idx)) { return right->rank(elem, mask->rank1(idx)); }
@@ -83,7 +81,6 @@ const uint32_t wavelet::select_rec(uint32_t idx, bool b) const {
 }
 
 const uint32_t wavelet::select(char elem, uint32_t idx) const {
-  //std::cerr << "S:" << elem << " " << idx << std::endl;
   return findLeaf(elem)->select_rec(idx, false);
 }
 const uint32_t wavelet::length(void) const {
