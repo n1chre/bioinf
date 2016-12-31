@@ -212,10 +212,9 @@ int main(int argc, char **argv) {
 
   if (show_stats) {
     auto millis = clock_diff(cmd_exec_start, cmd_exec_stop);
-    std::cerr << "Executing " << num_cmds << " took: "
-              << millis << " milliseconds "
-              << "with average of " << (1.*millis/num_cmds) << "milliseconds per command"
-              << std::endl;
+    std::cerr << "Executing " << num_cmds << " commands took: "
+              << millis << " milliseconds " << std::endl
+              << "Average time/command = " << (1.*millis/num_cmds) << " milliseconds" << std::endl;
   }
 
   if (show_stats) {
@@ -228,13 +227,13 @@ int main(int argc, char **argv) {
     if (KERN_SUCCESS!=task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t) &t_info, &t_info_count)) {
       return -1;
     }
-    std::cout << "Memory used: " << t_info.resident_size/1024 << " KB" << std::endl;
+    std::cerr << "Memory used: " << t_info.resident_size/1024 << " KB" << std::endl;
 #else
     std::cerr << "Memory stats not supported on this OS" << std::endl;
 #endif
 #elif __linux__
 
-    std::cout << "Memory used: " << getValue() << " KB" << std::endl;
+    std::cerr << "Memory used: " << getValue() << " KB" << std::endl;
 #endif
   }
 
