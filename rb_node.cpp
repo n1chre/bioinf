@@ -5,11 +5,10 @@
 #include "rb_node.h"
 
 // Constructor
-rb_node::rb_node(data *d) : d(d) {
+rb_node::rb_node(data *d, bool red) : d(d), red(red) {
   left = nullptr;
   right = nullptr;
   parent = nullptr;
-  red = true;
 }
 
 // Getters and setters
