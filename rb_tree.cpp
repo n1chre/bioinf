@@ -84,46 +84,45 @@ const rb_node *rb_tree::find_by_count(rb_node *node, char i, uint32_t idx) const
 
 void rb_tree::insert_fixup(rb_node *node) {
   rb_node *parent = node->get_parent();
-  if (parent == nullptr) {
-    return;
-  }
 
-  while (parent->is_red()) {
+  while (parent != nullptr && parent->is_red()) {
     rb_node *grandparent = parent->get_parent();
 
-    if (parent == grandparent->get_left()) {
-      rb_node *uncle = grandparent->get_right();
+    if (grandparent != nullptr) {
+      if (parent == grandparent->get_left()) {
+        rb_node *uncle = grandparent->get_right();
 
-      if (uncle->is_red()) {
-        parent->set_red(false);
-        uncle->set_red(false);
-        grandparent->set_red(true);
-        node = grandparent;
-      } else {
-        if (node == node->get_parent()->get_right()) {
-          rotate_left(node);
-          node = parent;
+        if (uncle != nullptr && uncle->is_red()) {
+          parent->set_red(false);
+          uncle->set_red(false);
+          grandparent->set_red(true);
+          node = grandparent;
+        } else {
+          if (node == node->get_parent()->get_right()) {
+            rotate_left(node);
+            node = parent;
+          }
+          rotate_right(parent);
+          parent->set_red(false);
+          grandparent->set_red(true);
         }
-        rotate_right(parent);
-        parent->set_red(false);
-        grandparent->set_red(true);
-      }
-    } else {
-      rb_node *uncle = grandparent->get_left();
+      } else {
+        rb_node *uncle = grandparent->get_left();
 
-      if (uncle->is_red()) {
-        parent->set_red(false);
-        uncle->set_red(false);
-        grandparent->set_red(true);
-        node = grandparent;
-      } else {
-        if (node == node->get_parent()->get_left()) {
-          rotate_right(node);
-          node = parent;
+        if (uncle != nullptr && uncle->is_red()) {
+          parent->set_red(false);
+          uncle->set_red(false);
+          grandparent->set_red(true);
+          node = grandparent;
+        } else {
+          if (node == node->get_parent()->get_left()) {
+            rotate_right(node);
+            node = parent;
+          }
+          rotate_left(parent);
+          parent->set_red(false);
+          grandparent->set_red(true);
         }
-        rotate_left(parent);
-        parent->set_red(false);
-        grandparent->set_red(true);
       }
     }
   }
@@ -135,17 +134,20 @@ void rb_tree::rotate_left(rb_node *node) {
   if (parent == nullptr) {
     return;
   }
-
   rb_node *grandparent = parent->get_parent();
   if (grandparent != nullptr) {
+    node->set_parent(grandparent);
     if (grandparent->get_right() == parent) {
       grandparent->set_right(node);
     } else {
       grandparent->set_left(node);
     }
   }
-
+  if (node->get_left() != nullptr) {
+    node->get_left()->set_parent(parent);
+  }
   parent->set_right(node->get_left());
+  parent->set_parent(node);
   node->set_left(parent);
 }
 
@@ -154,17 +156,20 @@ void rb_tree::rotate_right(rb_node *node) {
   if (parent == nullptr) {
     return;
   }
-
   rb_node *grandparent = parent->get_parent();
   if (grandparent != nullptr) {
+    node->set_parent(grandparent);
     if (grandparent->get_right() == parent) {
       grandparent->set_right(node);
     } else {
       grandparent->set_left(node);
     }
   }
-
+  if (node->get_right() != nullptr) {
+    node->get_right()->set_parent(parent);
+  }
   parent->set_left(node->get_right());
+  parent->set_parent(node);
   node->set_right(parent);
 }
 
