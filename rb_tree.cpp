@@ -142,6 +142,9 @@ void rb_tree::rotate_left(rb_node *node) {
     } else {
       grandparent->set_left(node);
     }
+  } else {
+    node->set_parent(nullptr);
+    root = node;
   }
   if (node->get_left() != nullptr) {
     node->get_left()->set_parent(parent);
@@ -164,6 +167,9 @@ void rb_tree::rotate_right(rb_node *node) {
     } else {
       grandparent->set_left(node);
     }
+  } else {
+    node->set_parent(nullptr);
+    root = node;
   }
   if (node->get_right() != nullptr) {
     node->get_right()->set_parent(parent);
