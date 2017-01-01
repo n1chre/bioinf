@@ -6,9 +6,9 @@
 
 // Constructor
 rb_node::rb_node(data *d) : d(d) {
-  left = NULL;
-  right = NULL;
-  parent = NULL;
+  left = nullptr;
+  right = nullptr;
+  parent = nullptr;
   red = true;
 }
 
