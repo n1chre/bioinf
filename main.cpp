@@ -2,6 +2,9 @@
 #include <fstream>
 #include <unordered_map>
 #include <unistd.h> /* getopt */
+#include <cassert>
+
+#define RUN_TEST
 
 #include "rank_select.h"
 #include "rb_tree.h"
@@ -32,8 +35,13 @@ long long int clock_diff(const std::chrono::steady_clock::time_point &start,
 void quit(const char *message);
 data *create_data(std::string &line, uint32_t word_size);
 void usage(const char *prog_name);
+void run_tests();
 
 int main(int argc, char **argv) {
+
+#ifdef RUN_TEST
+  return run_tests(), 0;
+#endif
 
   //--------------------------//
   // Read and check arguments //
@@ -278,6 +286,43 @@ data *create_data(std::string &line, uint32_t word_size) {
   }
 
   return _data;
+}
+
+void test_bitset() {
+  bitset b(65);
+  b[0] = 1;
+  b[64] = 1;
+
+  assert(b.binary_rank(0)==0);
+  assert(b.binary_rank(1)==1);
+  assert(b.binary_rank(5)==1);
+  assert(b.binary_rank(63)==1);
+  assert(b.binary_rank(64)==1);
+  assert(b.binary_rank(65)==2);
+
+  assert(b.binary_select(0, true)==0);
+  assert(b.binary_select(1, true)==64);
+  try {
+    b.binary_select(2, true);
+    assert(false);
+  } catch (const std::out_of_range &) {
+    assert(true);
+  }
+
+  for (int i = 0; i < 63; ++i) {
+    assert(b.binary_select(i, false)==i + 1);
+  }
+
+  try {
+    b.binary_select(63, false);
+    assert(false);
+  } catch (const std::out_of_range &) {
+    assert(true);
+  }
+}
+
+void run_tests() {
+  test_bitset();
 }
 
 #if __linux__
