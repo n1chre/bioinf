@@ -13,11 +13,13 @@ bitmask *bitmask_vector::create(uint32_t size) {
 }
 
 bitmask &bitmask_vector::set(uint32_t idx, bool b) {
+  check_idx(idx);
   mask[idx] = b;
   return *this;
 }
 
 const bool bitmask_vector::get(uint32_t idx) const {
+  check_idx(idx);
   return mask[idx];
 }
 
@@ -25,22 +27,23 @@ const uint32_t bitmask_vector::select01(uint32_t idx, bool b) const {
   uint32_t sol = 0;
   for (auto it = mask.begin(); it!=mask.end(); it++) {
     if (*it==b) {
-      if (idx--==0) {
+      if (--idx==0) {
         return sol;
       }
     }
     sol++;
   }
-  throw -1;
+  throw std::out_of_range("No such value");
 }
 
 const uint32_t bitmask_vector::rank0(uint32_t idx) const {
+  check_idx(idx);
   auto it = mask.begin();
-  return (uint32_t) std::count(it, it + idx, false);
+  return (uint32_t) std::count(it, it + idx + 1, false);
 }
 
 const uint32_t bitmask_vector::rank1(uint32_t idx) const {
-  return idx - rank0(idx);
+  return idx + 1 - rank0(idx);
 }
 
 const uint32_t bitmask_vector::size(void) const {

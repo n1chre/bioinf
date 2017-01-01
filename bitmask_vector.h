@@ -19,6 +19,12 @@ class bitmask_vector : public bitmask {
   std::vector<bool> mask;
   bitmask_vector(uint32_t size);
 
+  inline const void check_idx(uint32_t idx) const {
+    if (idx >= mask.size()) {
+      throw std::out_of_range("Index out of bounds for bitmask");
+    }
+  }
+
  public:
 
   static bitmask *create(uint32_t size);

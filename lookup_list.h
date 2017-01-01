@@ -23,6 +23,7 @@ class lookup_list : public rank_select {
 
  public:
   lookup_list(std::vector<data *> &nodes);
+  const char operator[](const uint32_t idx) const override;
   const uint32_t rank(char i, uint32_t idx) const override;
   const uint32_t select(char i, uint32_t idx) const override;
 };

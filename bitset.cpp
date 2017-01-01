@@ -4,7 +4,6 @@
 //
 
 #include "bitset.h"
-#include <iostream>
 
 uint8_t *bitset::generate_bit_lookup(void) {
   uint8_t *arr = new uint8_t[0xFFFF + 1];
@@ -53,14 +52,21 @@ uint32_t bitset::binary_rank(uint32_t idx) const {
     sol += popcount(bits[i]);
   }
 
-  sol += popcount(bits[pos.first] & ((1ull << pos.second) - 1));
+  uint64_t mask = ~0LLU;
+  pos.second++;
+  if (pos.second!=unit_size) {
+    mask = (1ull << pos.second) - 1;
+  }
+  sol += popcount(bits[pos.first] & mask);
   return sol;
 }
 
 uint32_t bitset::binary_select(uint32_t idx, bool v) const {
-  check_idx(idx);
+  if (idx==0) {
+    throw std::out_of_range("cant find 0th occurence");
+  }
 
-  auto f = [=](uint64_t x) -> uint8_t { return v ? popcount(x) : unit_size - popcount(x); };
+  auto f = [&](uint64_t x) -> uint8_t { return v ? popcount(x) : unit_size - popcount(x); };
 
   uint32_t sum = 0;
   uint32_t i = 0;
@@ -68,7 +74,7 @@ uint32_t bitset::binary_select(uint32_t idx, bool v) const {
 
   do {
     val = f(bits[i]);
-    if (sum + val > idx) { break; }
+    if (sum + val >= idx) { break; }
     sum += val;
     ++i;
   } while (i < bits.size());
@@ -77,46 +83,28 @@ uint32_t bitset::binary_select(uint32_t idx, bool v) const {
     throw std::out_of_range("No such value");
   }
 
+  // linear search bits
   uint32_t j;
   for (j = 0; j < unit_size; j++) {
     if (((bool) (bits[i] & (1llu << j)))==v) { sum++; }
-    if (sum > idx) { break; }
+    if (sum >= idx) { break; }
   }
 
   if (j==unit_size) {
     throw std::out_of_range("No such value");
   }
 
-  if ((i==bits.size() - 1) && (j >= (__size%unit_size))) {
-    throw std::out_of_range("No such value");
+  if (i==bits.size() - 1) {
+    uint32_t cut = __size%unit_size;
+    if (cut==0) {
+      cut = unit_size;
+    }
+    if (j >= cut) {
+      throw std::out_of_range("No such value");
+    }
   }
 
   return i*unit_size + j;
-}
-
-bitset bitset::operator>>(uint32_t pos) const {
-  auto discard_data = bits_position(pos);
-  uint64_t all_one_mask = (1LLU << discard_data.second) - 1;
-  bitset ret = *this;
-  std::vector<uint64_t> new_bits;
-  for (auto i = discard_data.first; i < ret.bits.size(); ++i) {
-    auto curr = ret.bits.at(i);
-    uint64_t next;
-    if (i + 1==ret.bits.size()) {
-      next = 0LLU;
-    } else {
-      next = ret.bits.at(i + 1);
-    }
-    curr = (curr >> discard_data.second)
-        | (next & all_one_mask) << (unit_size - discard_data.second);
-    new_bits.emplace_back(curr);
-  }
-  for (auto i = 0; i < discard_data.first; ++i) {
-    new_bits.emplace_back(0LLU);
-  }
-  ret.bits = new_bits;
-
-  return ret;
 }
 
 bitset::bool_proxy &bitset::operator[](const uint32_t idx) {
@@ -124,6 +112,7 @@ bitset::bool_proxy &bitset::operator[](const uint32_t idx) {
 
   auto pos = bits_position(idx);
   auto ret = new bool_proxy(this->bits.at(pos.first), pos.second);
+
   return *ret;
 }
 
@@ -131,6 +120,7 @@ const bitset::bool_proxy bitset::operator[](const uint32_t idx) const {
   check_idx(idx);
   auto pos = bits_position(idx);
   uint64_t tmp = this->bits.at(pos.first);
+
   return bool_proxy(tmp, pos.second);
 }
 
@@ -138,22 +128,6 @@ bitset &bitset::set(const uint32_t idx, bool v) {
   (*this)[idx] = v;
 
   return *this;
-}
-
-bitset operator&(const uint32_t lhs, const bitset &rhs) {
-  return rhs & lhs;
-}
-
-bitset operator&(const bitset &lhs, const uint32_t rhs) {
-  return lhs & bitset(lhs.__size, rhs);
-}
-
-bitset operator&(const bitset &lhs, const bitset &rhs) {
-  bitset ret = lhs;
-  for (int i = 0; i < lhs.bits.size(); ++i) {
-    ret.bits[i] &= rhs.bits[i];
-  }
-  return ret;
 }
 
 bitset::bool_proxy::bool_proxy(uint64_t &mask, uint32_t bit) : mask(mask), index(bit) {

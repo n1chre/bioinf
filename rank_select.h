@@ -14,6 +14,12 @@ class rank_select {
  public:
 
   /**
+   * @param idx index
+   * @return character at given position
+   */
+  virtual const char operator[](const uint32_t idx) const = 0;
+
+  /**
    * @return number of elements equal to elem found on indexes smaller than idx
    */
   virtual const uint32_t rank(char elem, uint32_t idx) const = 0;
