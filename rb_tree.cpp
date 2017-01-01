@@ -82,10 +82,10 @@ const rb_node *rb_tree::find_by_count(rb_node *node, char i, uint32_t idx) const
 
   uint32_t count = node->get_d()->get_count(i);
 
-  if (idx < count) {
+  if (idx <= count) {
     return find_by_count(node->get_left(), i, idx);
   }
-  if (idx > count + node->get_d()->get_wave()->select(i, idx - count)) {
+  if (idx > count + node->get_d()->get_wave()->select(i, idx - count) + 1) {
     return find_by_count(node->get_right(), i, idx);
   }
   return node;
