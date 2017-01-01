@@ -187,12 +187,3 @@ void rb_tree::rotate_right(rb_node *node) {
   parent->set_parent(node);
   node->set_right(parent);
 }
-
-// Getters and setters
-rb_node *rb_tree::get_root() const {
-  return root;
-}
-
-void rb_tree::set_root(rb_node *root) {
-  rb_tree::root = root;
-}

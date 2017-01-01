@@ -24,10 +24,8 @@ class rb_tree : public rank_select {
 
  public:
   rb_tree(std::vector<data *> &nodes);
-
   void insert(data *d);
-  rb_node *get_root() const;
-  void set_root(rb_node *root);
+
   const char operator[](const uint32_t idx) const override;
   const uint32_t rank(char i, uint32_t idx) const override;
   const uint32_t select(char i, uint32_t idx) const override;
