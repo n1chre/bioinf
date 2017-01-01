@@ -266,19 +266,11 @@ data *create_data(std::string &line, uint32_t word_size) {
   line = line.substr(len);
 
   std::unordered_map<char, uint32_t> chars;
-
   for (char c : chunk) {
     chars[c] = chars[c] + 1;
   }
 
-  std::string reduced_alpha;
-
-  std::transform(chars.begin(),
-                 chars.end(),
-                 std::back_inserter(reduced_alpha),
-                 [](auto &x) -> char { return x.first; });
-
-  wavelet *_wavelet = new wavelet(chunk, reduced_alpha);
+  wavelet *_wavelet = new wavelet(chunk);
   data *_data = new data(counters, _wavelet);
 
   for (auto it : chars) {
@@ -319,6 +311,28 @@ int getValue() {
  *                   TESTS                       *
  *                                               *
  * * * * * * * * * * * * * * * * * * * * * * * * */
+
+inline uint32_t __select(const std::string &str, char c, uint32_t idx) {
+  if (idx==0) { throw std::out_of_range("no elem"); }
+  uint32_t ret = 0;
+  for (auto _c : str) {
+    if (c==_c) {
+      if (--idx==0) {
+        return ret;
+      }
+    }
+    ret++;
+  }
+  throw std::out_of_range("no such elem");
+};
+
+inline uint32_t __rank(const std::string &str, char c, uint32_t idx) {
+  if (idx >= str.length()) {
+    throw std::out_of_range("no such idx");
+  }
+  auto it = str.begin();
+  return (uint32_t) std::count(it, it + idx + 1, c);
+};
 
 void test_bitset() {
   bitset b(65);
@@ -407,57 +421,30 @@ void test_bitmask() {
 }
 
 void test_wavelet() {
-  const uint32_t alpha_size = 10; // 1-26
-  const uint32_t str_size = 500;
+  const uint32_t alpha_size = 26; // 1-26
+  const uint32_t str_size = 1;
 
   // dont touch rest of this function
 
-  std::string alpha;
-  for (int i = 0; i < alpha_size; ++i) {
-    alpha += ('A' + i);
-  }
-
   std::string str;
   for (int i = 0; i < str_size; ++i) {
-    str += alpha[rand()%alpha_size];
+    str += ('A' + rand()%alpha_size);
   }
 
   bitmask::set_creator(&bitmask_bitset::create);
-  wavelet w(str, alpha);
+  wavelet w(str);
   assert(w.length()==str.length());
 
   for (uint32_t i = 0; i < str_size; ++i) {
     assert(str[i]==w[i]);
   }
 
-  auto _select = [&](char c, uint32_t idx) -> uint32_t {
-    if (idx==0) { throw std::out_of_range("no elem"); }
-    uint32_t ret = 0;
-    for (auto _c : str) {
-      if (c==_c) {
-        if (--idx==0) {
-          return ret;
-        }
-      }
-      ret++;
-    }
-    throw std::out_of_range("no such elem");
-  };
-
-  auto _rank = [&](char c, uint32_t idx) -> uint32_t {
-    if (idx >= str.length()) {
-      throw std::out_of_range("no such idx");
-    }
-    auto it = str.begin();
-    return (uint32_t) std::count(it, it + idx + 1, c);
-  };
-
   auto assert_select = [&](char c, uint32_t idx) -> void {
     try {
       auto _b = w.select(c, idx);
       // no exception, v must not throw exception
       try {
-        auto _v = _select(c, idx);
+        auto _v = __select(str, c, idx);
         assert(_b==_v);
       } catch (const std::out_of_range &) {
         assert(false);
@@ -465,7 +452,7 @@ void test_wavelet() {
     } catch (const std::out_of_range &) {
       // exception, expect exception too
       try {
-        _select(c, idx);
+        __select(str, c, idx);
         assert(false);
       } catch (const std::out_of_range &) {
         assert(true);
@@ -473,13 +460,85 @@ void test_wavelet() {
     }
   };
 
-  for (auto c : alpha) {
+  for (char j = 0; j < 26; ++j) {
+    char c = 'A' + j;
+    try {
+      w.rank(c, 0);
+    } catch (const std::invalid_argument &ex) {
+      continue;
+    }
     for (uint32_t i = 0; i < str_size; ++i) {
       assert_select(c, i);
-      assert(_rank(c, i)==w.rank(c, i));
+      assert(__rank(str, c, i)==w.rank(c, i));
       try {
         auto s = w.select(c, i);
         assert(w.rank(c, s)==i);
+      } catch (...) {
+      }
+    }
+  }
+
+}
+
+void test_lookup_list() {
+  const uint32_t alpha_size = 4; // 1-26
+  const uint32_t str_size = 1025;
+  const uint32_t word_size = 64;
+
+  // dont touch rest of this function
+
+  std::string str;
+  for (int i = 0; i < str_size; ++i) {
+    str += ('A' + rand()%alpha_size);
+  }
+  std::string for_rs = str;
+
+  bitmask::set_creator(&bitmask_bitset::create);
+
+  std::vector<data *> ds;
+  while (for_rs.length()) {
+    ds.push_back(create_data(for_rs, word_size));
+  }
+  rank_select *rs = new lookup_list(ds);
+
+  for (uint32_t i = 0; i < str_size; ++i) {
+    assert(str[i]==(*rs)[i]);
+  }
+
+  auto assert_select = [&](char c, uint32_t idx) -> void {
+    try {
+      auto _b = rs->select(c, idx);
+      // no exception, v must not throw exception
+      try {
+        auto _v = __select(str, c, idx);
+        assert(_b==_v);
+      } catch (const std::out_of_range &) {
+        assert(false);
+      }
+    } catch (const std::out_of_range &) {
+      // exception, expect exception too
+      try {
+        __select(str, c, idx);
+        assert(false);
+      } catch (const std::out_of_range &) {
+        assert(true);
+      }
+    }
+  };
+
+  for (char j = 0; j < 26; ++j) {
+    char c = 'A' + j;
+    try {
+      rs->rank(c, 0);
+    } catch (const std::invalid_argument &ex) {
+      continue;
+    }
+    for (uint32_t i = 0; i < str_size; ++i) {
+      assert_select(c, i);
+      assert(__rank(str, c, i)==rs->rank(c, i));
+      try {
+        auto s = rs->select(c, i);
+        assert(rs->rank(c, s)==i);
       } catch (...) {
       }
     }
@@ -492,14 +551,19 @@ void run_tests() {
   srand(420u);
 
   std::cerr << "Testing bitset... ";
-  test_bitset();
+//  test_bitset();
   std::cerr << "Pass!" << std::endl;
 
   std::cerr << "Testing bitmasks... ";
-  test_bitmask();
+//  test_bitmask();
   std::cerr << "Pass!" << std::endl;
 
   std::cerr << "Testing wavelet... ";
-  test_wavelet();
+//  test_wavelet();
   std::cerr << "Pass!" << std::endl;
+
+  std::cerr << "Testing lookup list... ";
+  test_lookup_list();
+  std::cerr << "Pass!" << std::endl;
+
 }
