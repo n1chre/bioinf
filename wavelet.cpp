@@ -3,12 +3,22 @@
 //
 
 #include "wavelet.h"
+#include <unordered_set>
 
 // private
 
-wavelet::wavelet(const wavelet *parent, const std::string &str, const std::string &alphabet) : parent(parent) {
+wavelet::wavelet(const wavelet *parent, const std::string &str) : parent(parent) {
 
   mask = bitmask::create((uint32_t) str.length());
+
+  // create alphabet
+  std::unordered_set<char> chars;
+  for (auto c : str) {
+    chars.insert(c);
+  }
+  std::string alphabet;
+  std::transform(chars.begin(), chars.end(), std::back_inserter(alphabet),
+                 [](auto &x) -> char { return x; });
 
   if (alphabet.length()==1) {
     alpha[alphabet[0]] = false;
@@ -17,18 +27,13 @@ wavelet::wavelet(const wavelet *parent, const std::string &str, const std::strin
     return;
   }
 
-  std::string aleft, aright, sleft, sright;
+  std::string sleft, sright;
   uint8_t half = (uint8_t) (alphabet.length()/2);
 
   for (uint32_t i = 0; i < alphabet.length(); ++i) {
     bool right = i >= half;
     char a = alphabet[i];
     alpha[a] = right;
-    if (right) {
-      aright += a;
-    } else {
-      aleft += a;
-    }
   }
 
   for (uint32_t j = 0; j < str.length(); ++j) {
@@ -42,8 +47,8 @@ wavelet::wavelet(const wavelet *parent, const std::string &str, const std::strin
     }
   }
 
-  left = new wavelet(this, sleft, aleft);
-  right = new wavelet(this, sright, aright);
+  left = new wavelet(this, sleft);
+  right = new wavelet(this, sright);
 }
 
 // public
@@ -58,6 +63,7 @@ const char wavelet::operator[](uint32_t idx) {
 }
 
 const uint32_t wavelet::rank(char elem, uint32_t idx) const {
+  checkElem(elem);
   if (leaf()) { return mask->rank0(idx); }
 
   uint32_t rnk;
@@ -88,6 +94,7 @@ const uint32_t wavelet::select_rec(uint32_t idx, bool b) const {
 }
 
 const uint32_t wavelet::select(char elem, uint32_t idx) const {
+  checkElem(elem);
   return findLeaf(elem)->select_rec(idx, false);
 }
 const uint32_t wavelet::length(void) const {

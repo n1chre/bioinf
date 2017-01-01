@@ -29,7 +29,7 @@ class wavelet {
   wavelet *left;
   wavelet *right;
 
-  wavelet(const wavelet *parent, const std::string &str, const std::string &alphabet);
+  wavelet(const wavelet *parent, const std::string &str);
 
   /**
    * Find leaf node which contains only given characters
@@ -47,6 +47,16 @@ class wavelet {
   }
 
   /**
+   * check if wavelet has given element
+   * @param elem element
+   */
+  inline const void checkElem(char elem) const {
+    if (alpha.find(elem)==alpha.end()) {
+      throw std::invalid_argument("Wavelet doesn't have that letter");
+    }
+  }
+
+  /**
    * Recursive select, goes from leaf to root node
    *
    * @param idx index for select
@@ -57,8 +67,7 @@ class wavelet {
 
  public:
 
-  wavelet(const std::string &str, const std::string &alphabet)
-      : wavelet(nullptr, str, alphabet) {};
+  wavelet(const std::string &str) : wavelet(nullptr, str) {};
 
   const char operator[](uint32_t idx);
   const uint32_t rank(char elem, uint32_t idx) const;
