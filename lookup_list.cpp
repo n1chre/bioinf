@@ -31,7 +31,7 @@ const uint32_t lookup_list::select(char i, uint32_t idx) const {
   auto it = *std::lower_bound(nodes.rbegin(),
                               nodes.rend(), idx,
                               [&](auto *ptr, auto val) -> bool {
-                                return ptr->get_count(i) > idx;
+                                return ptr->get_count(i) >= idx;
                               });
   return it->get_starting_idx() + it->get_wave()->select(i, idx - it->get_count(i));
 }
