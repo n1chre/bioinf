@@ -15,8 +15,8 @@ class rb_tree : public rank_select {
  private:
   rb_node *root;
 
-  static void rotate_right(rb_node *node);
-  static void rotate_left(rb_node *node);
+  void rotate_right(rb_node *node);
+  void rotate_left(rb_node *node);
   void insert_fixup(rb_node *node);
   rb_node *insert_recursive(data *d, rb_node *node, rb_node *new_node);
   const rb_node *find_by_index(rb_node *node, uint32_t idx) const;
