@@ -150,7 +150,7 @@ int main(int argc, char **argv) {
 
   rank_select *t;
   if (use_rb) {
-    t = new rb_tree(data_chunks);
+    t = new rb_tree(data_chunks, word_size);
     std::cerr << "Using red black tree for lookup..." << std::endl;
   } else {
     t = new lookup_list(data_chunks);

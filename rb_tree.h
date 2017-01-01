@@ -14,6 +14,7 @@
 class rb_tree : public rank_select {
  private:
   rb_node *root;
+  uint32_t word_size;
 
   void rotate_right(rb_node *node);
   void rotate_left(rb_node *node);
@@ -23,7 +24,8 @@ class rb_tree : public rank_select {
   const rb_node *find_by_count(rb_node *node, char i, uint32_t idx) const;
 
  public:
-  rb_tree(std::vector<data *> &nodes);
+  rb_tree(std::vector<data *> &nodes, uint32_t word_size);
+
   void insert(data *d);
 
   const char operator[](const uint32_t idx) const override;
