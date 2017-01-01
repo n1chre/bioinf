@@ -74,14 +74,9 @@ class bitset {
   const uint32_t size(void) const;
 
   // operators
-  bitset operator>>(uint32_t pos) const;
   bool_proxy &operator[](const uint32_t idx);
   const bool_proxy operator[](const uint32_t idx) const;
   bitset &set(const uint32_t idx, bool v);
-
-  friend bitset operator&(const uint32_t lhs, const bitset &rhs);
-  friend bitset operator&(const bitset &lhs, const uint32_t rhs);
-  friend bitset operator&(const bitset &lhs, const bitset &rhs);
 
 };
 
