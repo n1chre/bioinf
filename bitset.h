@@ -31,7 +31,7 @@ class bitset {
 
   inline const void check_idx(uint32_t idx) const {
     if (idx >= __size) {
-      throw std::invalid_argument("Index out of bounds for bitset");
+      throw std::out_of_range("Index out of bounds for bitset");
     }
   }
 

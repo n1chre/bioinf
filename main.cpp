@@ -288,6 +288,38 @@ data *create_data(std::string &line, uint32_t word_size) {
   return _data;
 }
 
+#if __linux__
+int parseLine(char* line) {
+  int i = (int) strlen(line);
+  const char* p = line;
+  while (*p <'0' || *p > '9') p++;
+  line[i-3] = '\0';
+  i = atoi(p);
+  return i;
+}
+
+int getValue() {
+  FILE* file = fopen("/proc/self/status", "r");
+  int result = -1;
+  char line[128];
+
+  while (fgets(line, 128, file) != NULL){
+    if (strncmp(line, "VmSize:", 7) == 0){
+      result = parseLine(line);
+      break;
+    }
+  }
+  fclose(file);
+  return result;
+}
+#endif
+
+/* * * * * * * * * * * * * * * * * * * * * * * * *
+ *                                               *
+ *                   TESTS                       *
+ *                                               *
+ * * * * * * * * * * * * * * * * * * * * * * * * */
+
 void test_bitset() {
   bitset b(65);
   b[0] = 1;
@@ -321,32 +353,57 @@ void test_bitset() {
   }
 }
 
-void run_tests() {
-  test_bitset();
-}
+void test_bitmask() {
+  const uint32_t size = 1025;
+  bitmask *b = bitmask_bitset::create(size);
+  bitmask *v = bitmask_vector::create(size);
 
-#if __linux__
-int parseLine(char* line) {
-  int i = (int) strlen(line);
-  const char* p = line;
-  while (*p <'0' || *p > '9') p++;
-  line[i-3] = '\0';
-  i = atoi(p);
-  return i;
-}
-
-int getValue() {
-  FILE* file = fopen("/proc/self/status", "r");
-  int result = -1;
-  char line[128];
-
-  while (fgets(line, 128, file) != NULL){
-    if (strncmp(line, "VmSize:", 7) == 0){
-      result = parseLine(line);
-      break;
-    }
+  for (uint32_t i = 0; i < 256; i++) {
+    auto idx = rand()%size;
+    b->set(idx, true);
+    v->set(idx, true);
   }
-  fclose(file);
-  return result;
+
+  for (uint32_t i = 0; i < size; i++) {
+    assert(b->get(i)==v->get(i));
+  }
+
+  auto assert_select = [&](uint32_t idx, bool val) -> void {
+    try {
+      auto _b = b->select01(idx, val);
+      // no exception, v must not throw exception
+      try {
+        auto _v = v->select01(idx, val);
+        assert(_b==_v);
+      } catch (const std::out_of_range &) {
+        assert(false);
+      }
+    } catch (const std::out_of_range &) {
+      // exception, expect exception too
+      try {
+        v->select01(idx, val);
+        assert(false);
+      } catch (const std::out_of_range &) {
+        assert(true);
+      }
+    }
+  };
+
+  for (uint32_t j = 0; j < size; ++j) {
+    assert(b->rank0(j)==v->rank0(j));
+    assert(b->rank1(j)==v->rank1(j));
+    assert_select(j, false);
+    assert_select(j, true);
+  }
+
 }
-#endif
+
+void run_tests() {
+  std::cerr << "Testing bitset..." << std::endl;
+  test_bitset();
+  std::cerr << "All pass!" << std::endl << std::endl;
+
+  std::cerr << "Testing bitmasks..." << std::endl;
+  test_bitmask();
+  std::cerr << "All pass!" << std::endl << std::endl;
+}
