@@ -477,6 +477,11 @@ void test_wavelet() {
     for (uint32_t i = 0; i < str_size; ++i) {
       assert_select(c, i);
       assert(_rank(c, i)==w.rank(c, i));
+      try {
+        auto s = w.select(c, i);
+        assert(w.rank(c, s)==i);
+      } catch (...) {
+      }
     }
   }
 
