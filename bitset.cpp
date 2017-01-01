@@ -4,10 +4,6 @@
 //
 
 #include "bitset.h"
-#include <iostream>
-
-using std::cout;
-using std::endl;
 
 uint8_t *bitset::generate_bit_lookup(void) {
   uint8_t *arr = new uint8_t[0xFFFF + 1];
@@ -69,7 +65,6 @@ uint32_t bitset::binary_select(uint32_t idx, bool v) const {
   if (idx==0) {
     throw std::out_of_range("cant find 0th occurence");
   }
-  --idx;
 
   auto f = [&](uint64_t x) -> uint8_t { return v ? popcount(x) : unit_size - popcount(x); };
 
@@ -79,7 +74,7 @@ uint32_t bitset::binary_select(uint32_t idx, bool v) const {
 
   do {
     val = f(bits[i]);
-    if (sum + val > idx) { break; }
+    if (sum + val >= idx) { break; }
     sum += val;
     ++i;
   } while (i < bits.size());
@@ -92,7 +87,7 @@ uint32_t bitset::binary_select(uint32_t idx, bool v) const {
   uint32_t j;
   for (j = 0; j < unit_size; j++) {
     if (((bool) (bits[i] & (1llu << j)))==v) { sum++; }
-    if (sum > idx) { break; }
+    if (sum >= idx) { break; }
   }
 
   if (j==unit_size) {
