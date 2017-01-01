@@ -9,6 +9,15 @@ lookup_list::lookup_list(std::vector<data *> &nodes) {
   this->nodes = nodes;
 }
 
+const char lookup_list::operator[](const uint32_t idx) const {
+  auto it = *std::lower_bound(nodes.rbegin(),
+                              nodes.rend(), idx,
+                              [&](auto *ptr, auto val) -> bool {
+                                return ptr->get_starting_idx() > idx;
+                              });
+  return (*it->get_wave())[idx - it->get_starting_idx()];
+}
+
 const uint32_t lookup_list::rank(char i, uint32_t idx) const {
   auto it = *std::lower_bound(nodes.rbegin(),
                               nodes.rend(), idx,
