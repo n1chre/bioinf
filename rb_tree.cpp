@@ -15,7 +15,7 @@ rb_tree::rb_tree(std::vector<data *> &nodes, uint32_t word_size) : word_size(wor
 // Public functions
 void rb_tree::insert(data *d) {
   rb_node *node = new rb_node(d);
-  root = insert_recursive(d, root, node);
+  root = insert_recursive(root, node);
   insert_fixup(node);
 }
 
@@ -47,15 +47,15 @@ const uint32_t rb_tree::select(char i, uint32_t idx) const {
 }
 
 // Private functions
-rb_node *rb_tree::insert_recursive(data *d, rb_node *node, rb_node *new_node) {
+rb_node *rb_tree::insert_recursive(rb_node *node, rb_node *new_node) {
   if (node==nullptr) {
     node = new_node;
   } else {
     new_node->set_parent(node);
-    if (d->get_starting_idx() > node->get_d()->get_starting_idx()) {
-      node->set_right(insert_recursive(d, node->get_right(), new_node));
+    if (new_node->get_d()->get_starting_idx() > node->get_d()->get_starting_idx()) {
+      node->set_right(insert_recursive(node->get_right(), new_node));
     } else {
-      node->set_left(insert_recursive(d, node->get_left(), new_node));
+      node->set_left(insert_recursive(node->get_left(), new_node));
     }
   }
   return node;
@@ -184,13 +184,4 @@ void rb_tree::rotate_right(rb_node *node) {
   parent->set_left(node->get_right());
   parent->set_parent(node);
   node->set_right(parent);
-}
-
-// Getters and setters
-rb_node *rb_tree::get_root() const {
-  return root;
-}
-
-void rb_tree::set_root(rb_node *root) {
-  rb_tree::root = root;
 }
