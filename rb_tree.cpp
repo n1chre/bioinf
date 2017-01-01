@@ -91,9 +91,8 @@ const rb_node *rb_tree::find_by_count(rb_node *node, char i, uint32_t idx) const
 }
 
 void rb_tree::insert_fixup(rb_node *node) {
-  rb_node *parent = node->get_parent();
-
-  while (parent!=nullptr && parent->is_red()) {
+  while (node->get_parent()!=nullptr && node->get_parent()->is_red()) {
+    rb_node *parent = node->get_parent();
     rb_node *grandparent = parent->get_parent();
 
     if (grandparent!=nullptr) {
