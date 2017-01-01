@@ -48,8 +48,7 @@ bitset::bitset(const bitset &bs) {
 }
 
 uint32_t bitset::binary_rank(uint32_t idx) const {
-  if (idx==0) { return 0; }
-  check_idx(idx - 1);
+  check_idx(idx);
 
   uint32_t sol = 0;
   auto pos = bits_position(idx);
@@ -57,11 +56,20 @@ uint32_t bitset::binary_rank(uint32_t idx) const {
     sol += popcount(bits[i]);
   }
 
-  sol += popcount(bits[pos.first] & ((1ull << pos.second) - 1));
+  uint64_t mask = ~0LLU;
+  pos.second++;
+  if (pos.second!=unit_size) {
+    mask = (1ull << pos.second) - 1;
+  }
+  sol += popcount(bits[pos.first] & mask);
   return sol;
 }
 
 uint32_t bitset::binary_select(uint32_t idx, bool v) const {
+  if (idx==0) {
+    throw std::out_of_range("cant find 0th occurence");
+  }
+  --idx;
 
   auto f = [&](uint64_t x) -> uint8_t { return v ? popcount(x) : unit_size - popcount(x); };
 

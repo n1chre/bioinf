@@ -26,7 +26,7 @@ const uint32_t bitmask_bitset::select01(uint32_t idx, bool b) const {
 }
 
 const uint32_t bitmask_bitset::rank0(uint32_t idx) const {
-  return idx - rank1(idx);
+  return idx + 1 - rank1(idx);
 }
 
 const uint32_t bitmask_bitset::rank1(uint32_t idx) const {
