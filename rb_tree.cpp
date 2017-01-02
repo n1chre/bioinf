@@ -79,7 +79,7 @@ const rb_node *rb_tree::find_by_index(rb_node *node, uint32_t idx) const {
   if (idx < node->get_d()->get_starting_idx()) {
     return find_by_index(node->get_left(), idx);
   }
-  if (idx > node->get_d()->get_starting_idx() + node->get_d()->get_wave()->length()) {
+  if (idx >= node->get_d()->get_starting_idx() + node->get_d()->get_wave()->length()) {
     return find_by_index(node->get_right(), idx);
   }
   return node;
