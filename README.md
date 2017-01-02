@@ -1,4 +1,4 @@
-# RBTree + rank/select operations
+# Fast rank/select operations
 
 [![License](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://img.shields.io/packagist/l/doctrine/orm.svg)
 
@@ -8,6 +8,9 @@ Project assignment for [Bioinformatics course](http://www.fer.unizg.hr/predmet/b
 - [Filip Hrenić](https://github.com/filiphrenic)
 - [Zvonimir Medić](https://github.com/admiralbulldog)
 - [Matija Oršolić](https://github.com/mators)
+
+## Implementation
+The goal was to implement fast rank/select operations on huge strings (DNA). We accomplished that by using wavelet trees with custom bitset implementation.
 
 ## Instructions
 

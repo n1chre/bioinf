@@ -46,11 +46,11 @@ int main(int argc, char **argv) {
   uint32_t word_size = 1024;
 
   bool show_stats = false;
-  bool use_bitmask = false;
+  bool use_vector = false;
   bool use_rb = false;
 
   int ch;
-  while ((ch = getopt(argc, argv, "o:c:w:sbt")) != -1) {
+  while ((ch = getopt(argc, argv, "o:c:w:svt"))!=-1) {
     switch (ch) {
       case 'o': SET_ARG(output_path);
         break;
@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
         break;
       case 's': show_stats = true;
         break;
-      case 'b': use_bitmask = true;
+      case 'v': use_vector = true;
         break;
       case 't': use_rb = true;
         break;
@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
   }
 
   std::function<bitmask *(uint32_t)> c;
-  if (use_bitmask) {
+  if (!use_vector) {
     c = bitmask_bitset::create;
     std::cerr << "Using bitset as bitmask (constant time rank/select)..." << std::endl;
   } else {
