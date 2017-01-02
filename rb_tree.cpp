@@ -15,7 +15,7 @@ rb_tree::rb_tree(std::vector<data *> &nodes, uint32_t word_size) : word_size(wor
 // Public functions
 void rb_tree::insert(data *d) {
   rb_node *node = new rb_node(d);
-  root = insert_recursive(d, root, node);
+  root = insert_recursive(root, node);
   insert_fixup(node);
 }
 
@@ -34,7 +34,12 @@ const uint32_t rb_tree::rank(char i, uint32_t idx) const {
     throw std::out_of_range("Index out of bounds");
   }
   data *d = node->get_d();
-  return d->get_count(i) + d->get_wave()->rank(i, idx - d->get_starting_idx());
+
+  try {
+    return d->get_count(i) + d->get_wave()->rank(i, idx - d->get_starting_idx());
+  } catch (const std::invalid_argument &) {
+    return d->get_count(i);
+  }
 }
 
 const uint32_t rb_tree::select(char i, uint32_t idx) const {
@@ -43,19 +48,24 @@ const uint32_t rb_tree::select(char i, uint32_t idx) const {
     throw std::out_of_range("Index out of bounds");
   }
   data *d = node->get_d();
-  return d->get_starting_idx() + d->get_wave()->select(i, idx - d->get_count(i));
+
+  try {
+    return d->get_starting_idx() + d->get_wave()->select(i, idx - d->get_count(i));
+  } catch (const std::invalid_argument &) {
+    throw std::out_of_range("no such element");
+  }
 }
 
 // Private functions
-rb_node *rb_tree::insert_recursive(data *d, rb_node *node, rb_node *new_node) {
+rb_node *rb_tree::insert_recursive(rb_node *node, rb_node *new_node) {
   if (node==nullptr) {
     node = new_node;
   } else {
     new_node->set_parent(node);
-    if (d->get_starting_idx() > node->get_d()->get_starting_idx()) {
-      node->set_right(insert_recursive(d, node->get_right(), new_node));
+    if (new_node->get_d()->get_starting_idx() > node->get_d()->get_starting_idx()) {
+      node->set_right(insert_recursive(node->get_right(), new_node));
     } else {
-      node->set_left(insert_recursive(d, node->get_left(), new_node));
+      node->set_left(insert_recursive(node->get_left(), new_node));
     }
   }
   return node;

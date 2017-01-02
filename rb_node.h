@@ -7,6 +7,9 @@
 
 #include "data.h"
 
+/**
+ * Node for the red black tree.
+ */
 class rb_node {
  private:
   rb_node *right;
@@ -16,8 +19,14 @@ class rb_node {
   data *d;
 
  public:
+  /**
+   * Constructor.
+   * @param d   node data
+   * @param red true if node is red
+   */
   rb_node(data *d, bool red = true);
 
+  // Getters and setters
   rb_node *get_left() const;
   void set_left(rb_node *left);
   rb_node *get_right() const;
@@ -27,7 +36,6 @@ class rb_node {
   bool is_red() const;
   void set_red(bool isRed);
   data *get_d() const;
-  void set_d(data *d);
 };
 
 #endif //BIOINF_RBNODE_H
