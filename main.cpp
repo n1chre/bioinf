@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <unistd.h> /* getopt */
 #include <vector>
+#include <chrono>
 #include "bitmask.h"
 #include "bitmask_bitset.h"
 #include "bitmask_vector.h"
@@ -68,7 +69,7 @@ int main(int argc, char **argv) {
     }
   }
 
-  if (argc - optind != 1) { usage(argv[0]); }
+  if (argc - optind!=1) { usage(argv[0]); }
   input_path = argv[optind];
 
   std::ifstream command_file(command_path);
@@ -77,7 +78,7 @@ int main(int argc, char **argv) {
   std::istream &cmd_in = command_path.length() ? command_file : std::cin;
   std::ostream &data_out = output_path.length() ? output_file : std::cout;
 
-  if (input_path.length() == 0) {
+  if (input_path.length()==0) {
     quit("Input file path is required");
   }
 
@@ -116,7 +117,7 @@ int main(int argc, char **argv) {
 
   while (!data_in.eof()) {
     std::getline(data_in, line);
-    if (!line.empty() && line[0] != '>' && line[0] != ';') { // Identifier marker
+    if (!line.empty() && line[0]!='>' && line[0]!=';') { // Identifier marker
       content += line;
 
       while (content.length() >= word_size) {
@@ -175,7 +176,7 @@ int main(int argc, char **argv) {
   uint32_t num_cmds = 0;
   while (!cmd_in.eof()) {
     cmd_in >> command >> symbol >> index;
-    if (tolower(command) == 'r') {
+    if (tolower(command)=='r') {
       data_out << "Rank(" << symbol << "," << index << "): ";
       try {
         res = t->rank(symbol, index);
@@ -184,7 +185,7 @@ int main(int argc, char **argv) {
         data_out << "index out of bounds";
       }
       num_cmds++;
-    } else if (tolower(command) == 's') {
+    } else if (tolower(command)=='s') {
       data_out << "Select(" << symbol << "," << index << "): ";
       try {
         res = t->select(symbol, index);
@@ -206,7 +207,7 @@ int main(int argc, char **argv) {
     auto millis = clock_diff(cmd_exec_start, cmd_exec_stop);
     std::cerr << "Executing " << num_cmds << " commands took: "
               << millis << " milliseconds " << std::endl
-              << "Average time/command = " << (1. * millis / num_cmds) << " milliseconds" << std::endl;
+              << "Average time/command = " << (1.*millis/num_cmds) << " milliseconds" << std::endl;
   }
 
   if (show_stats) {
@@ -215,10 +216,10 @@ int main(int argc, char **argv) {
     struct task_basic_info t_info;
     mach_msg_type_number_t t_info_count = TASK_BASIC_INFO_COUNT;
 
-    if (KERN_SUCCESS != task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t) &t_info, &t_info_count)) {
+    if (KERN_SUCCESS!=task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t) &t_info, &t_info_count)) {
       return -1;
     }
-    std::cerr << "Memory used: " << t_info.resident_size / 1024 << " KB" << std::endl;
+    std::cerr << "Memory used: " << t_info.resident_size/1024 << " KB" << std::endl;
 #else
     std::cerr << "Memory stats not supported on this OS" << std::endl;
 #endif
