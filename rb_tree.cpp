@@ -34,7 +34,12 @@ const uint32_t rb_tree::rank(char i, uint32_t idx) const {
     throw std::out_of_range("Index out of bounds");
   }
   data *d = node->get_d();
-  return d->get_count(i) + d->get_wave()->rank(i, idx - d->get_starting_idx());
+
+  try {
+    return d->get_count(i) + d->get_wave()->rank(i, idx - d->get_starting_idx());
+  } catch (const std::invalid_argument &) {
+    return d->get_count(i);
+  }
 }
 
 const uint32_t rb_tree::select(char i, uint32_t idx) const {
@@ -43,7 +48,12 @@ const uint32_t rb_tree::select(char i, uint32_t idx) const {
     throw std::out_of_range("Index out of bounds");
   }
   data *d = node->get_d();
-  return d->get_starting_idx() + d->get_wave()->select(i, idx - d->get_count(i));
+
+  try {
+    return d->get_starting_idx() + d->get_wave()->select(i, idx - d->get_count(i));
+  } catch (const std::invalid_argument &) {
+    throw std::out_of_range("no such element");
+  }
 }
 
 // Private functions
