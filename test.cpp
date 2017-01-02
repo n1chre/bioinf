@@ -3,6 +3,7 @@
 //
 
 #include "test.h"
+#include <iostream>
 
 int main(int argc, char **argv) {
   std::random_device rd;
@@ -10,15 +11,15 @@ int main(int argc, char **argv) {
 
   std::cerr << "Testing bitset... ";
   test_bitset();
-  std::cerr << "Pass!" << std::endl;
+  std::cerr << "\t\t\tPass!" << std::endl;
 
   std::cerr << "Testing bitmasks... ";
   test_bitmask();
-  std::cerr << "Pass!" << std::endl;
+  std::cerr << "\t\tPass!" << std::endl;
 
   std::cerr << "Testing wavelet... ";
   test_wavelet();
-  std::cerr << "Pass!" << std::endl;
+  std::cerr << "\t\t\tPass!" << std::endl;
 
   const uint32_t ws = 64;
 
@@ -27,13 +28,13 @@ int main(int argc, char **argv) {
       [](std::vector<data *> &v) -> rank_select * { return new lookup_list(v); },
       data::create, ws
   );
-  std::cerr << "Pass!" << std::endl;
+  std::cerr << "\t\tPass!" << std::endl;
 
   std::cerr << "Testing red black tree... ";
   test_rank_select(
       [](std::vector<data *> &v) -> rank_select * { return new rb_tree(v); },
       data::create, ws
   );
-  std::cerr << "Pass!" << std::endl;
+  std::cerr << "\tPass!" << std::endl;
 
 }

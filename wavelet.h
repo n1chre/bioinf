@@ -49,11 +49,10 @@ class wavelet {
   /**
    * check if wavelet has given element
    * @param elem element
+   * @return true if wavelet has that element
    */
-  inline const void checkElem(char elem) const {
-    if (alpha.find(elem)==alpha.end()) {
-      throw std::invalid_argument("Wavelet doesn't have that letter");
-    }
+  inline const bool has_elem(char elem) const {
+    return alpha.find(elem)!=alpha.end();
   }
 
   /**

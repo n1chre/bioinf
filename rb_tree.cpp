@@ -21,7 +21,7 @@ void rb_tree::insert(data *d) {
 
 const char rb_tree::operator[](const uint32_t idx) const {
   auto node = find_by_index(root, idx);
-  if (node == nullptr) {
+  if (node==nullptr) {
     throw std::out_of_range("Index out of bounds");
   }
   auto d = node->get_d();
@@ -30,21 +30,17 @@ const char rb_tree::operator[](const uint32_t idx) const {
 
 const uint32_t rb_tree::rank(char i, uint32_t idx) const {
   const rb_node *node = find_by_index(root, idx);
-  if (node == nullptr) {
+  if (node==nullptr) {
     throw std::out_of_range("Index out of bounds");
   }
   data *d = node->get_d();
 
-  try {
-    return d->get_count(i) + d->get_wave()->rank(i, idx - d->get_starting_idx());
-  } catch (const std::invalid_argument &) {
-    return d->get_count(i);
-  }
+  return d->get_count(i) + d->get_wave()->rank(i, idx - d->get_starting_idx());
 }
 
 const uint32_t rb_tree::select(char i, uint32_t idx) const {
   const rb_node *node = find_by_count(root, i, idx);
-  if (node == nullptr) {
+  if (node==nullptr) {
     throw std::out_of_range("Index out of bounds");
   }
   data *d = node->get_d();
@@ -58,7 +54,7 @@ const uint32_t rb_tree::select(char i, uint32_t idx) const {
 
 // Private functions
 rb_node *rb_tree::insert_recursive(rb_node *node, rb_node *new_node) {
-  if (node == nullptr) {
+  if (node==nullptr) {
     node = new_node;
   } else {
     new_node->set_parent(node);
@@ -72,7 +68,7 @@ rb_node *rb_tree::insert_recursive(rb_node *node, rb_node *new_node) {
 }
 
 const rb_node *rb_tree::find_by_index(rb_node *node, uint32_t idx) const {
-  if (node == nullptr) {
+  if (node==nullptr) {
     return nullptr;
   }
 
@@ -86,7 +82,7 @@ const rb_node *rb_tree::find_by_index(rb_node *node, uint32_t idx) const {
 }
 
 const rb_node *rb_tree::find_by_count(rb_node *node, char i, uint32_t idx) const {
-  if (node == nullptr) {
+  if (node==nullptr) {
     return nullptr;
   }
 
@@ -102,21 +98,21 @@ const rb_node *rb_tree::find_by_count(rb_node *node, char i, uint32_t idx) const
 }
 
 void rb_tree::insert_fixup(rb_node *node) {
-  while (node->get_parent() != nullptr && node->get_parent()->is_red()) {
+  while (node->get_parent()!=nullptr && node->get_parent()->is_red()) {
     rb_node *parent = node->get_parent();
     rb_node *grandparent = parent->get_parent();
 
-    if (grandparent != nullptr) {
-      if (parent == grandparent->get_left()) {
+    if (grandparent!=nullptr) {
+      if (parent==grandparent->get_left()) {
         rb_node *uncle = grandparent->get_right();
 
-        if (uncle != nullptr && uncle->is_red()) {
+        if (uncle!=nullptr && uncle->is_red()) {
           parent->set_red(false);
           uncle->set_red(false);
           grandparent->set_red(true);
           node = grandparent;
         } else {
-          if (node == node->get_parent()->get_right()) {
+          if (node==node->get_parent()->get_right()) {
             rotate_left(node);
             node = parent;
           }
@@ -127,13 +123,13 @@ void rb_tree::insert_fixup(rb_node *node) {
       } else {
         rb_node *uncle = grandparent->get_left();
 
-        if (uncle != nullptr && uncle->is_red()) {
+        if (uncle!=nullptr && uncle->is_red()) {
           parent->set_red(false);
           uncle->set_red(false);
           grandparent->set_red(true);
           node = grandparent;
         } else {
-          if (node == node->get_parent()->get_left()) {
+          if (node==node->get_parent()->get_left()) {
             rotate_right(node);
             node = parent;
           }
@@ -149,13 +145,13 @@ void rb_tree::insert_fixup(rb_node *node) {
 
 void rb_tree::rotate_left(rb_node *node) {
   rb_node *parent = node->get_parent();
-  if (parent == nullptr) {
+  if (parent==nullptr) {
     return;
   }
   rb_node *grandparent = parent->get_parent();
-  if (grandparent != nullptr) {
+  if (grandparent!=nullptr) {
     node->set_parent(grandparent);
-    if (grandparent->get_right() == parent) {
+    if (grandparent->get_right()==parent) {
       grandparent->set_right(node);
     } else {
       grandparent->set_left(node);
@@ -164,7 +160,7 @@ void rb_tree::rotate_left(rb_node *node) {
     node->set_parent(nullptr);
     root = node;
   }
-  if (node->get_left() != nullptr) {
+  if (node->get_left()!=nullptr) {
     node->get_left()->set_parent(parent);
   }
   parent->set_right(node->get_left());
@@ -174,13 +170,13 @@ void rb_tree::rotate_left(rb_node *node) {
 
 void rb_tree::rotate_right(rb_node *node) {
   rb_node *parent = node->get_parent();
-  if (parent == nullptr) {
+  if (parent==nullptr) {
     return;
   }
   rb_node *grandparent = parent->get_parent();
-  if (grandparent != nullptr) {
+  if (grandparent!=nullptr) {
     node->set_parent(grandparent);
-    if (grandparent->get_right() == parent) {
+    if (grandparent->get_right()==parent) {
       grandparent->set_right(node);
     } else {
       grandparent->set_left(node);
@@ -189,7 +185,7 @@ void rb_tree::rotate_right(rb_node *node) {
     node->set_parent(nullptr);
     root = node;
   }
-  if (node->get_right() != nullptr) {
+  if (node->get_right()!=nullptr) {
     node->get_right()->set_parent(parent);
   }
   parent->set_left(node->get_right());

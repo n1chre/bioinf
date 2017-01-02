@@ -27,15 +27,7 @@ const uint32_t lookup_list::rank(char i, uint32_t idx) const {
     throw std::out_of_range("invalid index");
   }
   data *d = *it;
-
-  uint32_t r;
-  try {
-    r = d->get_wave()->rank(i, idx - d->get_starting_idx());
-  } catch (const std::invalid_argument &) {
-    r = 0;
-  }
-
-  return d->get_count(i) + r;
+  return d->get_count(i) + d->get_wave()->rank(i, idx - d->get_starting_idx());
 }
 
 const uint32_t lookup_list::select(char i, uint32_t idx) const {

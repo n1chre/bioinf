@@ -1,7 +1,6 @@
 //
 // Created by Filip Hrenic on 02/01/2017.
 //
-#include <iostream>
 #include <cstdint>
 #include <string>
 #include <cassert>
@@ -177,11 +176,7 @@ void test_wavelet() {
 
   for (char j = 0; j < 26; ++j) {
     char c = 'A' + j;
-    try {
-      w.rank(c, 0);
-    } catch (const std::invalid_argument &ex) {
-      continue;
-    }
+    if (w.rank(c, str_size - 1)==0) { continue; }
     for (uint32_t i = 0; i < str_size; ++i) {
       assert_select(c, i);
       assert(__rank(str, c, i)==w.rank(c, i));
