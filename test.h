@@ -152,8 +152,8 @@ std::function<void(char, uint32_t)> asserter(
 }
 
 void test_wavelet() {
-  const uint32_t alpha_size = 26; // 1-26
-  const uint32_t str_size = 1;
+  const uint32_t alpha_size = 15; // 1-26
+  const uint32_t str_size = 1025;
 
   // dont touch rest of this function
 
@@ -223,11 +223,7 @@ void test_rank_select(
 
   for (char j = 0; j < 26; ++j) {
     char c = 'A' + j;
-    try {
-      rs->rank(c, 0);
-    } catch (const std::invalid_argument &ex) {
-      continue;
-    }
+    if (rs->rank(c, str_size - 1)==0) { continue; }
     for (uint32_t i = 0; i < str_size; ++i) {
       assert_select(c, i);
       assert(__rank(str, c, i)==rs->rank(c, i));
