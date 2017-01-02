@@ -13,6 +13,8 @@ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 20
 sudo update-alternatives --config gcc
 sudo update-alternatives --config g++
 
+sudo apt-get install -y wget gunzip
+
 cd scripts
 chmod +x *.sh
 ./gen_all.sh

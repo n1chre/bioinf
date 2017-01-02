@@ -9,17 +9,17 @@ fi
 LENGTH=$1
 
 NUM_CMDS=64
-if [[ $# -eq 2 ]]; then
+if [[ $# -ge 2 ]]; then
     NUM_CMDS=$2
 fi;
 
 ALPHA='ACTG'
-if [[ $# -eq 3 ]]; then
+if [[ $# -ge 3 ]]; then
     ALPHA=$3
 fi;
 
 rand_char() {
-    i=$(( RANDOM % 4 ))
+    i=$(( RANDOM % ${#ALPHA} ))
     echo -n ${ALPHA:${i}:1}
 }
 

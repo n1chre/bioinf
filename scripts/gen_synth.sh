@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
 if [[ $# -lt 1 ]] || [[ $# -gt 3 ]]; then
-    echo "usage: $0 length [line_width=80] [alphabet=ACTG]"
+    echo "usage: $0 length [alphabet=ACTG] [line_width=80]"
     exit 1
 fi
 
 # store parameters
 LENGTH=$1
 
-LINE_WIDTH=80
+ALPHA='ACTG'
 if [[ $# -eq 2 ]]; then
-    LINE_WIDTH=$2
+    ALPHA=$2
 fi;
 
-ALPHA='ACTG'
+LINE_WIDTH=80
 if [[ $# -eq 3 ]]; then
-    ALPHA=$3
+    LINE_WIDTH=$3
 fi;
 
 ROWS=$(( ${LENGTH} / ${LINE_WIDTH} ))
