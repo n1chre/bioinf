@@ -2,7 +2,6 @@
 #include <fstream>
 #include <unordered_map>
 #include <unistd.h> /* getopt */
-
 #include <vector>
 #include "bitmask.h"
 #include "bitmask_bitset.h"
@@ -236,9 +235,9 @@ void usage(const char *prog_name) {
   std::cerr << prog_name << " [options] input_file"
             << "\n\t-o output_file   [default=stdout]"
             << "\n\t-c commands_file [default=stdin]"
-            << "\n\t-w word_size     [default=1024, makes sense only with -b]"
+            << "\n\t-w word_size     [default=1024]"
             << "\n\t-s               [show statistics]"
-            << "\n\t-b               [use bitmask instead of bool vector]"
+            << "\n\t-v               [use bool vector instead of bitmask]"
             << "\n\t-t               [use red-black tree instead of lookup list]"
             << std::endl;
   exit(-1);

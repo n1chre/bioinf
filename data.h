@@ -8,6 +8,7 @@
 #include <utility>
 #include <unordered_map>
 #include <numeric>
+#include <algorithm>
 
 #include "wavelet.h"
 
