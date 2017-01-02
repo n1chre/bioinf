@@ -5,7 +5,7 @@
 #include "rb_tree.h"
 
 // Constructor
-rb_tree::rb_tree(std::vector<data *> &nodes, uint32_t word_size) : word_size(word_size) {
+rb_tree::rb_tree(std::vector<data *> &nodes) {
   root = nullptr;
   for (auto i : nodes) {
     insert(i);
@@ -94,7 +94,8 @@ const rb_node *rb_tree::find_by_count(rb_node *node, char i, uint32_t idx) const
   if (idx <= count) {
     return find_by_count(node->get_left(), i, idx);
   }
-  if (idx > count + node->get_d()->get_wave()->rank(i, word_size - 1)) {
+  auto w = node->get_d()->get_wave();
+  if (idx > count + w->rank(i, w->length() - 1)) {
     return find_by_count(node->get_right(), i, idx);
   }
   return node;

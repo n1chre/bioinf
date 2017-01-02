@@ -17,7 +17,6 @@
 class rb_tree : public rank_select {
  private:
   rb_node *root;
-  uint32_t word_size;
 
   /*
    * Right rotates node around it's parent.
@@ -53,10 +52,9 @@ class rb_tree : public rank_select {
   /**
    * Constructor. Creates the tree and inserts the given nodes in it.
    *
-   * @param nodes       vector of the data to be inserted into the tree
-   * @param word_size   word size of one node
+   * @param nodes   vector of the data to be inserted into the tree
    */
-  rb_tree(std::vector<data *> &nodes, uint32_t word_size);
+  rb_tree(std::vector<data *> &nodes);
 
   /**
    * Inserts the data d into the tree.

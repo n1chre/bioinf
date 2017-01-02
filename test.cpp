@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
 
   std::cerr << "Testing red black tree... ";
   test_rank_select(
-      [](std::vector<data *> &v) -> rank_select * { return new rb_tree(v, ws); },
+      [](std::vector<data *> &v) -> rank_select * { return new rb_tree(v); },
       data::create, ws
   );
   std::cerr << "Pass!" << std::endl;
