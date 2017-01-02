@@ -188,7 +188,7 @@ void test_wavelet() {
 
 void test_rank_select(
     rank_select *(*create)(std::vector<data *> &),
-    data *(*create_data)(std::string &, uint32_t),
+    data *(*create_data)(std::string &, uint32_t, std::unordered_map<char, uint32_t> &),
     const uint32_t word_size) {
   const uint32_t alpha_size = 4; // 1-26
   const uint32_t str_size = 1025;
@@ -202,10 +202,10 @@ void test_rank_select(
   std::string for_rs = str;
 
   bitmask::set_creator(&bitmask_bitset::create);
-
+  std::unordered_map<char, uint32_t> counters;
   std::vector<data *> ds;
   while (for_rs.length()) {
-    ds.push_back(create_data(for_rs, word_size));
+    ds.push_back(create_data(for_rs, word_size, counters));
   }
   rank_select *rs = create(ds);
 

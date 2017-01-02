@@ -112,18 +112,21 @@ int main(int argc, char **argv) {
 
   std::string line, name, content;
   std::vector<data *> data_chunks;
+
+  std::unordered_map<char, uint32_t> counters;
+
   while (!data_in.eof()) {
     std::getline(data_in, line);
     if (!line.empty() && line[0] != '>' && line[0] != ';') { // Identifier marker
       content += line;
 
       while (content.length() >= word_size) {
-        data_chunks.push_back(data::create(content, word_size));
+        data_chunks.push_back(data::create(content, word_size, counters));
       }
     }
   }
   if (content.length()) {
-    data_chunks.push_back(data::create(content, word_size));
+    data_chunks.push_back(data::create(content, word_size, counters));
   }
 
   auto create_nodes_end = std::chrono::steady_clock::now();

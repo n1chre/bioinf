@@ -31,8 +31,7 @@ const uint32_t data::get_count(char c) const {
   }
 }
 
-data *data::create(std::string &line, uint32_t word_size) {
-  static std::unordered_map<char, uint32_t> counters;
+data *data::create(std::string &line, uint32_t word_size, std::unordered_map<char, uint32_t>& counters) {
   static std::string alphabet = "ACTG";
 
   uint32_t len = std::min(word_size, (uint32_t) line.length());

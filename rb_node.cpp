@@ -5,7 +5,7 @@
 #include "rb_node.h"
 
 // Constructor
-rb_node::rb_node(data *d, bool red) : d(d), red(red) {
+rb_node::rb_node(data *d, bool red) : red(red), d(d) {
   left = nullptr;
   right = nullptr;
   parent = nullptr;
