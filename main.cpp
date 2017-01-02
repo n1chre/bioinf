@@ -3,9 +3,14 @@
 #include <unordered_map>
 #include <unistd.h> /* getopt */
 
-#define RUN_TEST
-
-#include "test.h"
+#include <vector>
+#include "bitmask.h"
+#include "bitmask_bitset.h"
+#include "bitmask_vector.h"
+#include "data.h"
+#include "rank_select.h"
+#include "lookup_list.h"
+#include "rb_tree.h"
 
 #ifdef __APPLE__
 #include "TargetConditionals.h"
@@ -22,22 +27,15 @@ int getValue();
 
 #define SET_ARG(path) if (path.length()) {usage(argv[0]); } path = optarg
 
-long long int clock_diff(const std::chrono::steady_clock::time_point &start,
-                         const std::chrono::steady_clock::time_point &end) {
+int64_t clock_diff(const std::chrono::steady_clock::time_point &start,
+                   const std::chrono::steady_clock::time_point &end) {
   return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 }
 
 void quit(const char *message);
-data *create_data(std::string &line, uint32_t word_size);
 void usage(const char *prog_name);
-void run_tests();
 
 int main(int argc, char **argv) {
-
-#ifdef RUN_TEST
-  return run_tests(), 0;
-#endif
-
   //--------------------------//
   // Read and check arguments //
   //--------------------------//
@@ -53,7 +51,7 @@ int main(int argc, char **argv) {
   bool use_rb = false;
 
   int ch;
-  while ((ch = getopt(argc, argv, "o:c:w:sbt"))!=-1) {
+  while ((ch = getopt(argc, argv, "o:c:w:sbt")) != -1) {
     switch (ch) {
       case 'o': SET_ARG(output_path);
         break;
@@ -71,7 +69,7 @@ int main(int argc, char **argv) {
     }
   }
 
-  if (argc - optind!=1) { usage(argv[0]); }
+  if (argc - optind != 1) { usage(argv[0]); }
   input_path = argv[optind];
 
   std::ifstream command_file(command_path);
@@ -80,7 +78,7 @@ int main(int argc, char **argv) {
   std::istream &cmd_in = command_path.length() ? command_file : std::cin;
   std::ostream &data_out = output_path.length() ? output_file : std::cout;
 
-  if (input_path.length()==0) {
+  if (input_path.length() == 0) {
     quit("Input file path is required");
   }
 
@@ -116,16 +114,16 @@ int main(int argc, char **argv) {
   std::vector<data *> data_chunks;
   while (!data_in.eof()) {
     std::getline(data_in, line);
-    if (!line.empty() && line[0]!='>' && line[0]!=';') { // Identifier marker
+    if (!line.empty() && line[0] != '>' && line[0] != ';') { // Identifier marker
       content += line;
 
       while (content.length() >= word_size) {
-        data_chunks.push_back(create_data(content, word_size));
+        data_chunks.push_back(data::create(content, word_size));
       }
     }
   }
   if (content.length()) {
-    data_chunks.push_back(create_data(content, word_size));
+    data_chunks.push_back(data::create(content, word_size));
   }
 
   auto create_nodes_end = std::chrono::steady_clock::now();
@@ -175,7 +173,7 @@ int main(int argc, char **argv) {
   uint32_t num_cmds = 0;
   while (!cmd_in.eof()) {
     cmd_in >> command >> symbol >> index;
-    if (tolower(command)=='r') {
+    if (tolower(command) == 'r') {
       data_out << "Rank(" << symbol << "," << index << "): ";
       try {
         res = t->rank(symbol, index);
@@ -184,7 +182,7 @@ int main(int argc, char **argv) {
         data_out << "index out of bounds";
       }
       num_cmds++;
-    } else if (tolower(command)=='s') {
+    } else if (tolower(command) == 's') {
       data_out << "Select(" << symbol << "," << index << "): ";
       try {
         res = t->select(symbol, index);
@@ -206,20 +204,19 @@ int main(int argc, char **argv) {
     auto millis = clock_diff(cmd_exec_start, cmd_exec_stop);
     std::cerr << "Executing " << num_cmds << " commands took: "
               << millis << " milliseconds " << std::endl
-              << "Average time/command = " << (1.*millis/num_cmds) << " milliseconds" << std::endl;
+              << "Average time/command = " << (1. * millis / num_cmds) << " milliseconds" << std::endl;
   }
 
   if (show_stats) {
 #ifdef __APPLE__
-#include "TargetConditionals.h"
 #if TARGET_OS_MAC
     struct task_basic_info t_info;
     mach_msg_type_number_t t_info_count = TASK_BASIC_INFO_COUNT;
 
-    if (KERN_SUCCESS!=task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t) &t_info, &t_info_count)) {
+    if (KERN_SUCCESS != task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t) &t_info, &t_info_count)) {
       return -1;
     }
-    std::cerr << "Memory used: " << t_info.resident_size/1024 << " KB" << std::endl;
+    std::cerr << "Memory used: " << t_info.resident_size / 1024 << " KB" << std::endl;
 #else
     std::cerr << "Memory stats not supported on this OS" << std::endl;
 #endif
@@ -249,32 +246,6 @@ void quit(const char *message) {
   exit(-1);
 }
 
-data *create_data(std::string &line, uint32_t word_size) {
-  static std::unordered_map<char, uint32_t> counters;
-  static std::string alphabet = "ACTG";
-
-  uint32_t len = std::min(word_size, (uint32_t) line.length());
-  std::string chunk = line.substr(0, len);
-
-  std::transform(chunk.begin(), chunk.end(), chunk.begin(), ::toupper);
-
-  line = line.substr(len);
-
-  std::unordered_map<char, uint32_t> chars;
-  for (char c : chunk) {
-    chars[c] = chars[c] + 1;
-  }
-
-  wavelet *_wavelet = new wavelet(chunk);
-  data *_data = new data(counters, _wavelet);
-
-  for (auto it : chars) {
-    counters[it.first] = counters[it.first] + it.second;
-  }
-
-  return _data;
-}
-
 #if __linux__
 int parseLine(char* line) {
   int i = (int) strlen(line);
@@ -301,40 +272,3 @@ int getValue() {
 }
 #endif
 
-#ifdef RUN_TEST
-
-void run_tests() {
-
-  srand(420u);
-
-  std::cerr << "Testing bitset... ";
-  test_bitset();
-  std::cerr << "Pass!" << std::endl;
-
-  std::cerr << "Testing bitmasks... ";
-  test_bitmask();
-  std::cerr << "Pass!" << std::endl;
-
-  std::cerr << "Testing wavelet... ";
-  test_wavelet();
-  std::cerr << "Pass!" << std::endl;
-
-  const uint32_t ws = 64;
-
-  std::cerr << "Testing lookup list... ";
-  test_rank_select(
-      [](std::vector<data *> &v) -> rank_select * { return new lookup_list(v); },
-      create_data, ws
-  );
-  std::cerr << "Pass!" << std::endl;
-
-  std::cerr << "Testing red black tree... ";
-  test_rank_select(
-      [](std::vector<data *> &v) -> rank_select * { return new rb_tree(v, ws); },
-      create_data, ws
-  );
-  std::cerr << "Pass!" << std::endl;
-
-}
-
-#endif

@@ -22,6 +22,7 @@ class data {
   uint32_t starting_idx;
 
  public:
+  static data *create(std::string &line, uint32_t word_size);
   data(const std::unordered_map<char, uint32_t> &counters, wavelet *wave);
   wavelet *get_wave() const;
   uint32_t get_starting_idx() const;

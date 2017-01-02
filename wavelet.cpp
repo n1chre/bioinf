@@ -13,14 +13,11 @@ wavelet::wavelet(const wavelet *parent, const std::string &str) : parent(parent)
 
   // create alphabet
   std::unordered_set<char> chars;
-  for (auto c : str) {
-    chars.insert(c);
-  }
+  std::copy(str.begin(), str.end(), std::inserter(chars, chars.end()));
   std::string alphabet;
-  std::transform(chars.begin(), chars.end(), std::back_inserter(alphabet),
-                 [](auto &x) -> char { return x; });
+  std::copy(chars.begin(), chars.end(), std::back_inserter(alphabet));
 
-  if (alphabet.length()==1) {
+  if (alphabet.length() == 1) {
     alpha[alphabet[0]] = false;
     left = nullptr;
     right = nullptr;
@@ -28,7 +25,7 @@ wavelet::wavelet(const wavelet *parent, const std::string &str) : parent(parent)
   }
 
   std::string sleft, sright;
-  uint8_t half = (uint8_t) (alphabet.length()/2);
+  uint8_t half = (uint8_t) (alphabet.length() / 2);
 
   for (uint32_t i = 0; i < alphabet.length(); ++i) {
     bool right = i >= half;
@@ -73,7 +70,7 @@ const uint32_t wavelet::rank(char elem, uint32_t idx) const {
     rnk = mask->rank0(idx);
   }
 
-  if (rnk--==0) { return 0; }
+  if (rnk-- == 0) { return 0; }
   return (alpha.at(elem) ? right : left)->rank(elem, rnk);
 }
 
@@ -87,8 +84,8 @@ const wavelet *wavelet::findLeaf(char c) const {
 
 const uint32_t wavelet::select_rec(uint32_t idx, bool b) const {
   uint32_t _idx = mask->select01(idx, b);
-  if (parent!=nullptr) {
-    _idx = parent->select_rec(_idx + 1, (this==parent->right));
+  if (parent != nullptr) {
+    _idx = parent->select_rec(_idx + 1, (this == parent->right));
   }
   return _idx;
 }

@@ -30,3 +30,25 @@ const uint32_t data::get_count(char c) const {
     return 0U;
   }
 }
+
+data *data::create(std::string &line, uint32_t word_size) {
+  static std::unordered_map<char, uint32_t> counters;
+  static std::string alphabet = "ACTG";
+
+  uint32_t len = std::min(word_size, (uint32_t) line.length());
+  std::string chunk = line.substr(0, len);
+
+  std::transform(chunk.begin(), chunk.end(), chunk.begin(), ::toupper);
+
+  line = line.substr(len);
+
+  wavelet *_wavelet = new wavelet(chunk);
+  data *_data = new data(counters, _wavelet);
+
+  for (char c : chunk) {
+    counters[c] = counters[c] + 1;
+  }
+
+  return _data;
+
+}

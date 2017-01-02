@@ -5,8 +5,6 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "-pedantic-errors -Wall")
 
 set(SOURCE_FILES
-        main.cpp test.h
-
         # bitset
         bitset.cpp bitset.h
 
@@ -32,4 +30,5 @@ set(SOURCE_FILES
         data.cpp data.h
         )
 
-add_executable(bioinf ${SOURCE_FILES})
+add_executable(bioinf main.cpp ${SOURCE_FILES})
+add_executable(bioinf_test test.cpp test.h ${SOURCE_FILES})
