@@ -6,10 +6,9 @@
 #define BIOINF_BITMASK_H
 
 #include <cstdint>
+#include <functional>
 
 class bitmask;
-
-typedef bitmask *(*CREATE)(uint32_t);
 
 /**
  * Interface that provides some methods needed by wavelet, such as rank0/1, select01...
@@ -17,14 +16,14 @@ typedef bitmask *(*CREATE)(uint32_t);
 class bitmask {
 
  private:
-  static CREATE CREATOR;
+  static std::function<bitmask *(uint32_t)> CREATOR;
 
  public:
 
   /**
    * @param creator used bitmask creator
    */
-  static void set_creator(CREATE creator);
+  static void set_creator(std::function<bitmask *(uint32_t)> creator);
 
   /**
    * Creates new bitmask

@@ -4,9 +4,9 @@
 
 #include "bitmask.h"
 
-CREATE bitmask::CREATOR = nullptr;//&bitmask_bitset::create;
+std::function<bitmask *(uint32_t)> bitmask::CREATOR = nullptr;//&bitmask_bitset::create;
 
-void bitmask::set_creator(CREATE creator) {
+void bitmask::set_creator(std::function<bitmask *(uint32_t)> creator) {
   CREATOR = creator;
 }
 

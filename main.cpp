@@ -94,12 +94,12 @@ int main(int argc, char **argv) {
     quit("Given command file doesn't exist.");
   }
 
-  CREATE c;
+  std::function<bitmask *(uint32_t)> c;
   if (use_bitmask) {
-    c = &bitmask_bitset::create;
+    c = bitmask_bitset::create;
     std::cerr << "Using bitset as bitmask (constant time rank/select)..." << std::endl;
   } else {
-    c = &bitmask_vector::create;
+    c = bitmask_vector::create;
     std::cerr << "Using vector of bools as bitmask (linear time rank/select)..." << std::endl;
   }
   bitmask::set_creator(c);
