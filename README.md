@@ -83,10 +83,10 @@ Also, let C = N/W (number of wavelets)
 
 Implementation | Create time | Query time | Memory
 ------------ | ------------- | ------------- | -------------
-Bitset & Lookup | *O(C\*log(A)\*(W+A))* | *O(W/B\*log(C)\*log(A))* | *O(N\*log(A))*
-Bitset & RBTree | *O(C\*(log(A)\*(W+A) + log(C)))* | *O(W/B\*log(C)\*log(A))* | *O(N\*log(A))*
-Vector & Lookup | *O(C\*log(A)\*(W+A))* | *O(W\*log(C)\*log(A))* | *O(N\*log(A))*
-Vector & RBTree | *O(C\*(log(A)\*(W+A) + log(C)))* | *O(W\*log(C)\*log(A))* | *O(N\*log(A))*
+Bitset & Lookup | *O(C*log(A)*(W+A))* | *O(W/B*log(C)*log(A))* | *O(N*log(A))*
+Bitset & RBTree | *O(C*(log(A)*(W+A) + log(C)))* | *O(W/B*log(C)*log(A))* | *O(N*log(A))*
+Vector & Lookup | *O(C*log(A)*(W+A))* | *O(W*log(C)*log(A))* | *O(N*log(A))*
+Vector & RBTree | *O(C*(log(A)*(W+A) + log(C)))* | *O(W*log(C)*log(A))* | *O(N*log(A))*
 
 #### Create time
 
@@ -102,7 +102,7 @@ Vector & RBTree | *O(C\*(log(A)\*(W+A) + log(C)))* | *O(W\*log(C)\*log(A))* | *O
 
 #### Bacterias
 
-Species | Total size | Create time
+Species | Total length | Create time (milliseconds)
 ------------ | ------------- | -------------
 Anaplasma_phagocytophilum | 1.47M | 241
 Escherichia_coli | 4.64M | 769
