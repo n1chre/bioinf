@@ -3,9 +3,8 @@
 //
 #include "lookup_list.h"
 
-lookup_list::lookup_list(std::vector<data *> &nodes) {
+lookup_list::lookup_list(std::vector<data *> &nodes) : nodes(nodes) {
   this->size = (uint32_t) nodes.size();
-  this->nodes = nodes;
 }
 
 const char lookup_list::operator[](const uint32_t idx) const {

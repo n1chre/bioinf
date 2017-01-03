@@ -19,7 +19,7 @@
 class lookup_list : public rank_select {
  private:
   uint32_t size;
-  std::vector<data *> nodes;
+  std::vector<data *> &nodes;
 
  public:
   lookup_list(std::vector<data *> &nodes);
