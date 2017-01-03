@@ -11,6 +11,10 @@ if [[ ! -d synth ]]; then
     scripts/gen_all.sh
 fi;
 
+# use cmake compiled files on macos
+PREFIX='cmake-build-debug'
+[[ `uname -s` = 'Darwin' ]] || PREFIX='.'
+
 # measure on synthetic files
 
 echo "Measuring synthetic files..."
@@ -35,7 +39,7 @@ for input_file in `ls synth/*`; do
                 optt=${opt2}
                 [[ ${optt} != "x" ]] || optt=""
 
-                out=`./bioinf ${optb} ${optt} -o /dev/null -c ${cmd_file} -s ${input_file} 2>&1`
+                out=`${PREFIX}/bioinf ${optb} ${optt} -o /dev/null -c ${cmd_file} -s ${input_file} 2>&1`
 
                 node_time=`echo ${out} | sed -nE "s/.*Creating nodes took: ([0-9]+) .*/\1/p"`
                 tree_time=`echo ${out} | sed -nE "s/.*Creating tree took: ([0-9]+) .*/\1/p"`
@@ -77,7 +81,7 @@ for input_file in `ls bacterias/*`; do
                 optt=${opt2}
                 [[ ${optt} != "x" ]] || optt=""
 
-                out=`./bioinf ${optb} ${optt} -o /dev/null -c ${cmd_file} -s ${input_file} 2>&1`
+                out=`${PREFIX}/bioinf ${optb} ${optt} -o /dev/null -c ${cmd_file} -s ${input_file} 2>&1`
 
                 node_time=`echo ${out} | sed -nE "s/.*Creating nodes took: ([0-9]+) .*/\1/p"`
                 tree_time=`echo ${out} | sed -nE "s/.*Creating tree took: ([0-9]+) .*/\1/p"`
