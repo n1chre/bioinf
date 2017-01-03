@@ -88,19 +88,19 @@ Bitset & RBTree | *O(C*(log(A)*(W+A) + log(C)))* | *O(W/B*log(C)*log(A))* | *O(N
 Vector & Lookup | *O(C*log(A)*(W+A))* | *O(W*log(C)*log(A))* | *O(N*log(A))*
 Vector & RBTree | *O(C*(log(A)*(W+A) + log(C)))* | *O(W*log(C)*log(A))* | *O(N*log(A))*
 
-#### Create time
+### Create time
 
 ![Create time](images/create_time.png)
 
-#### Run time
+### Run time
 
 ![Run time](images/run_time.png)
 
-#### Memory consumption
+### Memory consumption
 
 ![Memory](images/memory.png)
 
-#### Bacterias
+### Bacterias
 
 Species | Total length | Create time (milliseconds)
 ------------ | ------------- | -------------
