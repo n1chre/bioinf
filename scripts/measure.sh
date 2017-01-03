@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-if [[ -d measures ]]; then
-    echo "Already measured, exiting..."
-    exit 1
-fi
-mkdir measures
+#if [[ -d measures ]]; then
+#    echo "Already measured, exiting..."
+#    exit 1
+#fi
+#mkdir measures
 
 if [[ ! -d synth ]]; then
     scripts/dl_bacteria.sh
@@ -24,13 +24,13 @@ for input_file in `ls synth/*`; do
         num_cmds=`echo ${cmd_file} | cut -d_ -f3 | cut -d. -f1`
 
         for opt1 in -v x; do
-            [[ ${opt1} = "-v" ]]
+            [[ ${opt1} != "-v" ]]
             is_vector=$?
             optb=${opt1}
             [[ ${optb} != "x" ]] || optb=""
 
             for opt2 in -t x; do
-                [[ ${opt2} = "-t" ]]
+                [[ ${opt2} != "-t" ]]
                 is_rbtree=$?
                 optt=${opt2}
                 [[ ${optt} != "x" ]] || optt=""
@@ -42,8 +42,6 @@ for input_file in `ls synth/*`; do
                 create_time=$(( node_time+tree_time ))
                 cmd_time=`echo ${out} | sed -nE "s/.*commands took: ([0-9]+) .*/\1/p"`
                 memory_used=`echo ${out} | sed -nE "s/.*Memory used: ([0-9]+) .*/\1/p"`
-
-
 
                 row="${len};${num_cmds};${is_vector};${is_rbtree};${create_time};${cmd_time};${memory_used}"
                 echo ${row} >> measures/examples.txt
@@ -68,13 +66,13 @@ for input_file in `ls bacterias/*`; do
         num_cmds=`echo ${cmd_file} | cut -d_ -f3 | cut -d. -f1`
 
         for opt1 in -v x; do
-            [[ ${opt1} = "-v" ]]
+            [[ ${opt1} != "-v" ]]
             is_vector=$?
             optb=${opt1}
             [[ ${optb} != "x" ]] || optb=""
 
             for opt2 in -t x; do
-                [[ ${opt2} = "-t" ]]
+                [[ ${opt2} != "-t" ]]
                 is_rbtree=$?
                 optt=${opt2}
                 [[ ${optt} != "x" ]] || optt=""
