@@ -12,5 +12,5 @@ if [[ -f bioinf-test ]]; then
     rm -f bioinf-test
 fi
 
-g++-5 -std=c++14 -O3 -o bioinf main.cpp ${SOURCE_FILES}
-g++-5 -std=c++14 -O3 -o bioinf-test test.h test.cpp ${SOURCE_FILES}
+g++-5 -std=c++14 -Ofast -march=native -flto -frename-registers -freciprocal-math -fno-signed-zeros -fno-trapping-math -funroll-loops  -fassociative-math -o bioinf main.cpp ${SOURCE_FILES}
+g++-5 -std=c++14 -Ofast -march=native -flto -frename-registers -freciprocal-math -fno-signed-zeros -fno-trapping-math -funroll-loops  -fassociative-math -o bioinf-test test.h test.cpp ${SOURCE_FILES}
