@@ -60,6 +60,57 @@ scripts/gen_all.sh
 ```
 This will download DNA FASTA file of four bacterias into bacterias folder, generate synthetic files of varying lengths (100-1M) into synth folder and generate commands of varying number of commands.
 
+## Results
+
+We ran thorough measurements of our implementation on a MacBook Pro 2015 (2,7 GHz Intel Core i5 with 8GB ram) in a virtual machine (Ubuntu 14.04, 4GB RAM, 2 virtual CPU's).
+
+In the next sections we present:
+ - **creation time** (time to create data structure)
+ - **running time** (time to run a given number of queries on the structure)
+ - **memory consumption** (memory used by the process)
+
+> note that x-axis has exponential values
+
+```
+Definition:
+ * N - input file length
+ * W - wavelet size (1024)
+ * A - alphabet size (4)
+ * B - bitset unit size (64)
+
+Also, let C = N/W (number of wavelets) 
+```
+
+Implementation | Create time | Query time | Memory
+------------ | ------------- | ------------- | -------------
+Bitset & Lookup | *O(C\*log(A)\*(W+A))* | *O(W/B\*log(C)\*log(A))* | *O(N\*log(A))*
+Bitset & RBTree | *O(C\*(log(A)\*(W+A) + log(C)))* | *O(W/B\*log(C)\*log(A))* | *O(N\*log(A))*
+Vector & Lookup | *O(C\*log(A)\*(W+A))* | *O(W\*log(C)\*log(A))* | *O(N\*log(A))*
+Vector & RBTree | *O(C\*(log(A)\*(W+A) + log(C)))* | *O(W\*log(C)\*log(A))* | *O(N\*log(A))*
+
+#### Create time
+
+![Create time](images/create_time.png)
+
+#### Run time
+
+![Run time](images/run_time.png)
+
+#### Memory consumption
+
+![Memory](images/memory.png)
+
+#### Bacterias
+
+Species | Total size | Create time
+------------ | ------------- | -------------
+Anaplasma_phagocytophilum | 1.47M | 241
+Escherichia_coli | 4.64M | 769
+Mycobacterium_tuberculosis | 4.41M | 734
+Salmonella_enterica | 4.95M | 814
+
+Run time depends on the number of queries and is similar to example results.
+
 License
 ---------
 MIT License
