@@ -168,14 +168,27 @@ int main(int argc, char **argv) {
 
   char command;
   char symbol;
-  uint32_t index;
+  int64_t _index;
 
   auto cmd_exec_start = std::chrono::steady_clock::now();
 
   uint32_t res;
   uint32_t num_cmds = 0;
   while (!cmd_in.eof()) {
-    cmd_in >> command >> symbol >> index;
+    cmd_in >> command >> symbol >> _index;
+
+    if (cmd_in.fail() || cmd_in.bad()) {
+      std::cerr << "Error on reading command input stream. Exiting loop." << std::endl;
+      break;
+    }
+
+    if (_index < 0) {
+      std::cerr << "Index must be nonnegative..." << std::endl;
+      continue;
+    }
+
+    uint32_t index = static_cast<uint32_t>(_index);
+
     if (tolower(command)=='r') {
       data_out << "Rank(" << symbol << "," << index << "): ";
       try {
