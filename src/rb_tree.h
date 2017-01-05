@@ -12,7 +12,12 @@
 #include "rank_select.h"
 
 /**
- * Implementation of rank select using the red black tree.
+ * Implementation of rank select using the red-black tree.
+ *
+ * Red-black tree implementation is based on the algorithms in the
+ * "Introduction to Algorithms" book by Cormen, Leiserson, Rivest and Smith.
+ *
+ * Since delete function was not needed for this project, it was not implemented.
  */
 class rb_tree : public rank_select {
  private:
