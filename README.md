@@ -102,12 +102,12 @@ Vector & RBTree | _O(C\*(log(A)\*(W+A)+log(C)))_ | _O(W\*log(C)*log(A))_ | _O(N\
 
 ### Bacterias
 
-Species | Total length | Create time (milliseconds)
------------- | ------------- | -------------
-Anaplasma_phagocytophilum | 1.47M | 241
-Escherichia_coli | 4.64M | 769
-Mycobacterium_tuberculosis | 4.41M | 734
-Salmonella_enterica | 4.95M | 814
+Species | Total length | Create time (milliseconds) | Memory (KB)
+------------ | ------------- | ------------- | -------------
+Anaplasma_phagocytophilum | 1.47M | 241 | 50620
+Escherichia_coli | 4.64M | 769 | 157780
+Mycobacterium_tuberculosis | 4.41M | 734 | 149984
+Salmonella_enterica | 4.95M | 814 | 168260
 
 Run time depends on the number of queries and is similar to example results.
 
