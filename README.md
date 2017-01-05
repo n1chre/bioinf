@@ -84,9 +84,9 @@ Also, let C = N/W (number of wavelets)
 Implementation | Create time | Query time | Memory
 ------------ | ------------- | ------------- | -------------
 Bitset & Lookup | _O(C\*log(A)\*(W+A))_ | _O(W/B\*log(C)*log(A))_ | _O(N\*log(A))_
-Bitset & RBTree | _O(C\*log(A)\*(W+A)+log(C)))_ | _O(W/B\*log(C)*log(A))_ | _O(N\*log(A))_
+Bitset & RBTree | _O(C\*(log(A)\*(W+A)+log(C)))_ | _O(W/B\*log(C)*log(A))_ | _O(N\*log(A))_
 Vector & Lookup | _O(C\*log(A)\*(W+A))_ | _O(W\*log(C)*log(A))_ | _O(N\*log(A))_
-Vector & RBTree | _O(C\*log(A)\*(W+A)+log(C)))_ | _O(W\*log(C)*log(A))_ | _O(N\*log(A))_
+Vector & RBTree | _O(C\*(log(A)\*(W+A)+log(C)))_ | _O(W\*log(C)*log(A))_ | _O(N\*log(A))_
 
 ### Create time
 
