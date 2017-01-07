@@ -178,7 +178,7 @@ int main(int argc, char **argv) {
     cmd_in >> command >> symbol >> _index;
 
     if (cmd_in.fail() || cmd_in.bad()) {
-      std::cerr << "Error on reading command input stream. Exiting loop." << std::endl;
+//       std::cerr << "Error on reading command input stream. Exiting loop." << std::endl;
       break;
     }
 
