@@ -97,10 +97,10 @@ int main(int argc, char **argv) {
   std::function<bitmask *(uint32_t)> c;
   if (!use_vector) {
     c = bitmask_bitset::create;
-    std::cerr << "Using bitset as bitmask (constant time rank/select)..." << std::endl;
+//    std::cerr << "Using bitset as bitmask (constant time rank/select)..." << std::endl;
   } else {
     c = bitmask_vector::create;
-    std::cerr << "Using vector of bools as bitmask (linear time rank/select)..." << std::endl;
+//    std::cerr << "Using vector of bools as bitmask (linear time rank/select)..." << std::endl;
   }
   bitmask::set_creator(c);
 
@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
   // Create nodes             //
   //--------------------------//
 
-  auto create_nodes_start = std::chrono::steady_clock::now();
+  auto create_tree_start = std::chrono::steady_clock::now();
 
   std::string line, name, content;
   std::vector<data *> data_chunks;
@@ -129,28 +129,18 @@ int main(int argc, char **argv) {
     data_chunks.push_back(data::create(content, word_size, counters));
   }
 
-  auto create_nodes_end = std::chrono::steady_clock::now();
-
-  if (show_stats) {
-    std::cerr << "Creating nodes took: "
-              << clock_diff(create_nodes_start, create_nodes_end)
-              << " milliseconds"
-              << std::endl;
-  }
-
   //--------------------------//
   // Create tree              //
   //--------------------------//
 
-  auto create_tree_start = std::chrono::steady_clock::now();
 
   rank_select *t;
   if (use_rb) {
     t = new rb_tree(data_chunks);
-    std::cerr << "Using red black tree for lookup..." << std::endl;
+//    std::cerr << "Using red black tree for lookup..." << std::endl;
   } else {
     t = new lookup_list(data_chunks);
-    std::cerr << "Using zmedi tree for lookup..." << std::endl;
+//    std::cerr << "Using zmedi tree for lookup..." << std::endl;
   }
 
   auto create_tree_end = std::chrono::steady_clock::now();
@@ -178,7 +168,7 @@ int main(int argc, char **argv) {
     cmd_in >> command >> symbol >> _index;
 
     if (cmd_in.fail() || cmd_in.bad()) {
-//       std::cerr << "Error on reading command input stream. Exiting loop." << std::endl;
+//      std::cerr << "Error on reading command input stream. Exiting loop." << std::endl;
       break;
     }
 
@@ -219,8 +209,8 @@ int main(int argc, char **argv) {
   if (show_stats) {
     auto millis = clock_diff(cmd_exec_start, cmd_exec_stop);
     std::cerr << "Executing " << num_cmds << " commands took: "
-              << millis << " milliseconds " << std::endl
-              << "Average time/command = " << (1.*millis/num_cmds) << " milliseconds" << std::endl;
+              << millis << " milliseconds " << std::endl;
+//              << "Average time/command = " << (1.*millis/num_cmds) << " milliseconds" << std::endl;
   }
 
   if (show_stats) {
